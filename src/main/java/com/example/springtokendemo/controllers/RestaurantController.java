@@ -1,7 +1,7 @@
 package com.example.springtokendemo.controllers;
 
 import com.example.springtokendemo.model.Restaurant;
-import com.example.springtokendemo.service.service.RestaurantService;
+import com.example.springtokendemo.service.RestaurantService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;

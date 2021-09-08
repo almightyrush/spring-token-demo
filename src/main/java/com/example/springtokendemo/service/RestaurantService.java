@@ -1,4 +1,4 @@
-package com.example.springtokendemo.service.service;
+package com.example.springtokendemo.service;
 
 import com.example.springtokendemo.model.Restaurant;
 import com.example.springtokendemo.repository.RestaurantRepo;
