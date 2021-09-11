@@ -2,12 +2,14 @@ package com.example.springtokendemo.service;
 
 import com.example.springtokendemo.model.dto.Request;
 import com.example.springtokendemo.model.dto.Response;
-import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+
+import java.beans.Encoder;
+import java.util.Base64;
 
 @Service
 public class IdScanService {
@@ -22,9 +24,8 @@ public class IdScanService {
     private String authKey;
 
     public String getLicense(String text) throws Exception {
-        Base64 base64 = new Base64();
+        Base64.Encoder base64 = Base64.getEncoder();
         String encodedString = String.valueOf(base64.encode(text.getBytes()));
-
 
         Request request = new Request();
         request.setText(encodedString);
