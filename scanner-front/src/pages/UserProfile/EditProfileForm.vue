@@ -96,7 +96,7 @@
     methods: {
       checkValidation() {
         if (this.user.username === '' || this.user.email === '' || this.user.firstName === ''
-        || this.user.lastName === '' || this.user.password === '' || this.user.role.length === 0 || this.user.restaurant.length === 0) {
+        || this.user.lastName === '' || this.user.password === '' ) {
           this.$notify({type:'warning',text: 'Fields are empty'});
         }
         else {

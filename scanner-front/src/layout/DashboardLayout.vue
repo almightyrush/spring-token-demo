@@ -13,10 +13,10 @@
         <i class="nc-icon nc-bank"></i>
         <p>Add Restaurant</p>
       </sidebar-link>
-      <sidebar-link v-if="isAdmin()" to="/scanner/table-list">
+     <!-- <sidebar-link v-if="isAdmin()" to="/scanner/table-list">
         <i class="nc-icon nc-notes"></i>
         <p>Table list</p>
-      </sidebar-link>
+      </sidebar-link>-->
     </side-bar>
     <div class="main-panel">
       <top-navbar></top-navbar>
@@ -49,9 +49,9 @@
         if (this.$sidebar.showSidebar) {
           this.$sidebar.displaySidebar(false)
         }
-      },  
+      },
       isAdmin() {
-        const role = localStorage.getItem('UserRole');  
+        const role = localStorage.getItem('UserRole');
         return role.includes('ROLE_ADMIN');
       },
     }

@@ -53,7 +53,7 @@
       </div>
       <div class="text-center">
         <button type="submit" class="btn btn-info btn-fill float-right" @click.prevent="checkValidation">
-          Add User
+          Add Restaurant
         </button>
       </div>
     </form>
@@ -82,7 +82,7 @@
         }
       }
     },
-    methods:{ 
+    methods:{
       checkValidation() {
         if (this.user.name === '' || this.user.address1 === '' || this.user.address2 === ''
         || this.user.country === '' || this.user.city === '' || this.user.zipcode === '') {
@@ -93,7 +93,7 @@
         }
       },
       addRestaurant() {
-        this.$http.post('api/restaurant', this.input, this.header).then(response => {
+        this.$http.post('api/restaurant', this.user, this.header).then(response => {
           if (response) {
             this.$notify({type:'success',text: 'Restaurant added successfully'});
           }
@@ -108,7 +108,7 @@
           }
           else {
             this.$notify({type:'error',text: 'Session expired login again'});
-          }        
+          }
         }).catch(() => {
           this.$notify({type:'error',text: 'Session expired login again'});
           this.$router.push({name: 'Login'});
