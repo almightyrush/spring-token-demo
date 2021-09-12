@@ -24,8 +24,8 @@ public class IdScanService {
     private String authKey;
 
     public String getLicense(String text) throws Exception {
-        Base64.Encoder base64 = Base64.getEncoder();
-        String encodedString = String.valueOf(base64.encode(text.getBytes()));
+        Base64.Encoder base64 = java.util.Base64.getEncoder();
+        String encodedString = base64.encodeToString(text.getBytes());
 
         Request request = new Request();
         request.setText(encodedString);
