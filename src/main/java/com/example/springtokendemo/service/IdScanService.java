@@ -1,5 +1,6 @@
 package com.example.springtokendemo.service;
 
+import com.example.springtokendemo.model.dto.DriverLicense;
 import com.example.springtokendemo.model.dto.Request;
 import com.example.springtokendemo.model.dto.Response;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +24,7 @@ public class IdScanService {
     @Value("${idScan.authKey}")
     private String authKey;
 
-    public String getLicense(String text) throws Exception {
+    public DriverLicense getLicense(String text) throws Exception {
         Base64.Encoder base64 = java.util.Base64.getEncoder();
         String encodedString = base64.encodeToString(text.getBytes());
 
@@ -36,7 +37,7 @@ public class IdScanService {
         try {
             response = restTemplate.postForEntity(idScanUrl, request, Response.class);
             if (response.getStatusCode().is2xxSuccessful()) {
-                return response.getBody().getParseResult().getDriverLicense().getLicenseNumber();
+                return response.getBody().getParseResult().getDriverLicense();
             }
         } catch (Exception e) {
             e.printStackTrace();

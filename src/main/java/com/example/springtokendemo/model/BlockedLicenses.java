@@ -18,6 +18,10 @@ public class BlockedLicenses extends AbstractEntity {
 
     private String license;
 
+    private String fullName;
+
+    private String city;
+
     private String reason;
 
     public BlockedLicenses() {
@@ -57,5 +61,21 @@ public class BlockedLicenses extends AbstractEntity {
     public BlockedLicenses setReason(String reason) {
         this.reason = reason;
         return this;
+    }
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
     }
 }

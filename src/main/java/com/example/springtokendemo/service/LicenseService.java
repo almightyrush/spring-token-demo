@@ -1,9 +1,12 @@
 package com.example.springtokendemo.service;
 
 import com.example.springtokendemo.model.BlockedLicenses;
+import com.example.springtokendemo.model.dto.DriverLicense;
+import com.example.springtokendemo.model.dto.LicenseResponseDto;
 import com.example.springtokendemo.repository.LicenseRepo;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -25,13 +28,22 @@ public class LicenseService {
         return licenseRepo.save(blockedLicensesRequest);
     }
 
-    public String parseText(String text) throws Exception {
-        String license = idScanService.getLicense(text);
+    public List<BlockedLicenses> getAllBlockedLicenses() {
+        return licenseRepo.findAll();
+    }
 
-        Optional<BlockedLicenses> blockedLicenses = licenseRepo.findByLicenseIgnoreCase(license);
+    public LicenseResponseDto parseText(String text) throws Exception {
+        DriverLicense license = idScanService.getLicense(text);
+
+        Optional<BlockedLicenses> blockedLicenses = licenseRepo.findByLicenseIgnoreCase(license.getLicenseNumber());
         if (blockedLicenses.isPresent()) {
             throw new Exception("License is blocked due to :" + blockedLicenses.get().getReason());
         }
-        return "License is not blocked";
+        return new LicenseResponseDto(license.getFullName(), license.getLicenseNumber(), license.getCity());
+    }
+
+    public String deleteBlockedLicense(Long id) {
+        licenseRepo.delete(licenseRepo.findById(id).orElseThrow(() -> new RuntimeException("License Id cannot be found")));
+        return "License unblocked successfully";
     }
 }

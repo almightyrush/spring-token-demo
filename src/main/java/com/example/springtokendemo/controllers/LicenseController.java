@@ -1,6 +1,7 @@
 package com.example.springtokendemo.controllers;
 
 import com.example.springtokendemo.model.BlockedLicenses;
+import com.example.springtokendemo.model.dto.LicenseResponseDto;
 import com.example.springtokendemo.model.dto.Request;
 import com.example.springtokendemo.service.LicenseService;
 import org.springframework.http.HttpStatus;
@@ -8,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -21,7 +23,7 @@ public class LicenseController {
         this.licenseService = licenseService;
     }
 
-    @RequestMapping(value = "/blockLicense", method = RequestMethod.POST)
+    @PostMapping("/blockLicense")
     public ResponseEntity<BlockedLicenses> blockLicense(@RequestBody BlockedLicenses blockedLicenses) {
         try {
             return new ResponseEntity<>(licenseService.blockLicense(blockedLicenses), HttpStatus.OK);
@@ -33,12 +35,39 @@ public class LicenseController {
         }
     }
 
-    @RequestMapping(value = "/parse", method = RequestMethod.POST)
-    public ResponseEntity<String> parse(@RequestBody Request request) {
+    @GetMapping(value= "/blockLicense")
+    public ResponseEntity<List<BlockedLicenses>> getAllBlockLicense() {
+        try {
+            return new ResponseEntity<>(licenseService.getAllBlockedLicenses(), HttpStatus.OK);
+        } catch (Exception e) {
+            Map<String, String> map = new HashMap<>();
+            map.put("status", "false");
+            map.put("message", e.getMessage());
+            return new ResponseEntity(map, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PostMapping(value = "/parse")
+    public ResponseEntity<LicenseResponseDto> parse(@RequestBody Request request) {
         try {
             return new ResponseEntity<>(licenseService.parseText(request.getText()), HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+            Map<String, String> map = new HashMap<>();
+            map.put("status", "false");
+            map.put("message", e.getMessage());
+            return new ResponseEntity(map, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @DeleteMapping("/blockLicense")
+    public ResponseEntity<String> unblockLicense(@RequestParam Long licenseId){
+        try {
+            return new ResponseEntity<>(licenseService.deleteBlockedLicense(licenseId), HttpStatus.OK);
+        } catch (Exception e) {
+            Map<String, String> map = new HashMap<>();
+            map.put("status", "false");
+            map.put("message", e.getMessage());
+            return new ResponseEntity(map, HttpStatus.BAD_REQUEST);
         }
     }
 }
