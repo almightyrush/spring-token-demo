@@ -13,11 +13,14 @@
                             placeholder="Search" v-model="input.text">
                   </base-input>
                 </div>
-              </div>
-              <div class="text-center">
-                <button type="submit" class="btn btn-info btn-fill float-left"  @click="showModal">
+                <div class="col-md-4 d-flex justify-content-left align-items-center" style="margin-top: 10px;">
+                  <button type="submit" class=" btn btn-info btn-fill float-left"  @click="showModal">
                   Search
                 </button>
+                </div>
+              </div>
+              <!-- custom modal for popup -->
+              <div class="text-center">
                 <main-modal name="Custom-modal"
                 :width="350"
                 :height="150"
@@ -27,7 +30,54 @@
                   <h4 slot="header" class="card-title">{{toggleValue}}</h4>
                 </div>
                 </main-modal>
+              </div><hr/> 
+
+              <div class="row">
+                <div class="col-md-9">
+                  <base-input type="text"
+                            label="Name"
+                            placeholder="Name" v-model="user.fullName"
+                            disabled>
+                  </base-input>
+                </div>
               </div>
+              <div class="row">
+                <div class="col-md-6">
+                  <base-input type="text"
+                            label="License"
+                            placeholder="License" v-model="user.licenseNumber"
+                            disabled>
+                  </base-input>
+                </div>
+                <div class="col-md-3">
+                  <base-input type="text"
+                            label="City"
+                            placeholder="City" v-model="user.city"
+                            disabled>
+                  </base-input>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-9">
+                  <base-input type="text"
+                            label="Reason"
+                            placeholder="Reason" v-model="user.reason">
+                  </base-input>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-2">
+                  <button type="submit" class="btn btn-danger btn-fill float-left"  @click="blockUser" :disabled="enableBlock">
+                  Block
+              </button>
+                </div>
+                <div class="col-md-2">
+                  <button type="submit" class="btn btn-success btn-fill float-left"  @click="unblockUser" :disabled="enableUnblock">
+                  UnBlock
+              </button>
+                </div>
+              </div>
+              
             </form>
           </card>
         </div>
@@ -47,9 +97,28 @@ export default {
         input: {
           text: '',
         },
+        user: {
+          fullName: '',
+          licenseNumber: '',
+          city: '',
+          isBlocked: false,
+          licenseId: '',
+          reason: ''
+        },
+        blockTheUser: {
+            reason:'',
+            user:{
+              id: ''
+            },
+            license: '',
+            fullName: '',
+            city: ''
+        },
+        enableUnblock: true,
+        enableBlock: true,
         role: '',
-        username: '',
-        toggleValue: 'License is not blocked',
+        logInUser: '',
+        toggleValue: '',
         header: { headers: AuthHeader() },
       }
     },
@@ -61,13 +130,12 @@ export default {
     logout() {
       localStorage.removeItem('token');
       localStorage.removeItem('UserRole');
-      localStorage.removeItem('username');
       this.$router.push({name: 'Login'});
     },
     isLogin() {
       this.$http.get('api/test/user', this.header).then(response => {
         if (response.data) {
-          console.log(response.data);
+          // do nothing
         }
         else {
           this.$notify({type:'error',text: 'Session expired login again'});
@@ -83,21 +151,74 @@ export default {
       } 
       else {
         this.$http.post('api/parse', this.input, this.header).then(response => {
-          if (response) {
-            response.data = this.toggleValue;
+          if (response.data.isBlocked) {
+            const data = response.data;
+            this.user.city= data.city
+            this.user.fullName= data.fullName
+            this.user.isBlocked= data.isBlocked
+            this.user.licenseId= data.licenseId
+            this.user.licenseNumber= data.licenseNumber
+            this.user.reason = data.reason
+            this.toggleValue = 'License is blocked';
             this.$modal.show('Custom-modal');
+            this.enableUnblock = false;
+            this.enableBlock = true;
+          }
+          else {
+            const data = response.data;
+            this.user.city= data.city
+            this.user.fullName= data.fullName
+            this.user.isBlocked= data.isBlocked
+            this.user.licenseId= data.licenseId
+            this.user.licenseNumber= data.licenseNumber
+            this.user.reason= data.reason
+            this.toggleValue = 'License is not blocked';
+            this.$modal.show('Custom-modal');
+            this.enableBlock = false;
+            this.enableUnblock = true;
           }
           }).catch((error) => {
           this.$notify({type:'error',text: error});
         });
       }
+    },
+    blockUser() {
+      const userid = JSON.parse(localStorage.getItem('token'));
+      if (this.user.reason === '') {
+        this.$notify({type:'warning',text: 'Input field is empty'});
+      } 
+      else {
+        this.blockTheUser.city = this.user.city
+        this.blockTheUser.license = this.user.licenseNumber
+        this.blockTheUser.fullName = this.user.fullName
+        this.blockTheUser.reason = this.user.reason
+        this.blockTheUser.user.id = userid.id;
+        this.$http.post('api/blockLicense', this.blockTheUser, this.header).then(response => {
+          if (response) {
+            this.$notify({type:'success',text: 'License is blocked'});
+            this.user = {}
+          }
+          }).catch(() => {
+          this.$notify({type:'error',text: 'License is already blocked'});
+        });
+      }
+    },
+    unblockUser() {
+        this.$http.delete('api/blockLicense'+ '?licenseId=' + this.user.licenseId, this.header).then(response => {
+          if (response) {
+            this.$notify({type:'success',text: 'License is unblocked'});
+            this.user = {}
+          }
+          }).catch((error) => {
+          this.$notify({type:'error',text: error});
+        });
     }
   },
   computed: {
-    getUsername() {
-      this.username = localStorage.getItem('username')
-      return username
-    },
+    getUser() {
+      this.logInUser = localStorage.getItem('token')
+      return this.logInUser.accessToken
+    }
   },
   created() {
     this.isLogin();

@@ -29,12 +29,12 @@
 
   > thead > tr > th{
     border-bottom-width: 1px;
-    font-size: $font-size-small;
+    font-size: 14px;
     text-transform: uppercase;
-    color: $dark-gray;
-    font-weight: $font-weight-normal;
+    color: black;
+    font-weight: bold;
     padding-bottom: 5px;
-    border-top: none !important;
+    border-top-width: 1px !important;
     border-bottom: none;
     text-align: left !important;
   }

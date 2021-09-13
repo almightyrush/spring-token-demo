@@ -5,6 +5,7 @@ import App from './App.vue'
 import API from './api';
 import Notifications from 'vue-notification'
 import VModal from 'vue-js-modal'
+import {ClientTable} from 'vue-tables-2';
 
 // LightBootstrap plugin
 import LightBootstrap from './light-bootstrap-main'
@@ -16,6 +17,7 @@ import './registerServiceWorker'
 // plugin setup
 Vue.use(VueRouter)
 Vue.use(LightBootstrap)
+Vue.use(ClientTable);
 Vue.prototype.$http = API;
 Vue.use(Notifications)
 Vue.use(VModal, { componentName: 'MainModal' },)

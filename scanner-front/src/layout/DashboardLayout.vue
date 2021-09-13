@@ -13,10 +13,10 @@
         <i class="nc-icon nc-bank"></i>
         <p>Add Restaurant</p>
       </sidebar-link>
-     <!-- <sidebar-link v-if="isAdmin()" to="/scanner/table-list">
+     <sidebar-link v-if="isAdmin()" to="/scanner/table-list">
         <i class="nc-icon nc-notes"></i>
-        <p>Table list</p>
-      </sidebar-link>-->
+        <p>User List</p>
+      </sidebar-link>
     </side-bar>
     <div class="main-panel">
       <top-navbar></top-navbar>
