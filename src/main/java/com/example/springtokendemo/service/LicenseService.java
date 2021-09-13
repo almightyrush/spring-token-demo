@@ -4,6 +4,7 @@ import com.example.springtokendemo.model.BlockedLicenses;
 import com.example.springtokendemo.model.dto.DriverLicense;
 import com.example.springtokendemo.model.dto.LicenseResponseDto;
 import com.example.springtokendemo.repository.LicenseRepo;
+import jdk.nashorn.internal.ir.Block;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -35,11 +36,12 @@ public class LicenseService {
     public LicenseResponseDto parseText(String text) throws Exception {
         DriverLicense license = idScanService.getLicense(text);
 
-        Optional<BlockedLicenses> blockedLicenses = licenseRepo.findByLicenseIgnoreCase(license.getLicenseNumber());
-        if (blockedLicenses.isPresent()) {
-            throw new Exception("License is blocked due to :" + blockedLicenses.get().getReason());
+        Optional<BlockedLicenses> blockedLicensesOptional = licenseRepo.findByLicenseIgnoreCase(license.getLicenseNumber());
+        if (blockedLicensesOptional.isPresent()) {
+            BlockedLicenses blockedLicenses = blockedLicensesOptional.get();
+            return new LicenseResponseDto(license.getFullName(), license.getLicenseNumber(), license.getCity(), true, blockedLicenses.getId());
         }
-        return new LicenseResponseDto(license.getFullName(), license.getLicenseNumber(), license.getCity());
+        return new LicenseResponseDto(license.getFullName(), license.getLicenseNumber(), license.getCity(), false);
     }
 
     public String deleteBlockedLicense(Long id) {
