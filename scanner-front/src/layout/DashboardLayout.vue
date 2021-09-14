@@ -9,11 +9,11 @@
         <i class="nc-icon nc-circle-09"></i>
         <p>Add User</p>
       </sidebar-link>
-      <sidebar-link v-if="isAdmin()" to="/scanner/restaurant">
+      <sidebar-link v-if="isAdmin()" to="/scanner/hotel">
         <i class="nc-icon nc-bank"></i>
-        <p>Add Restaurant</p>
+        <p>Add Hotel</p>
       </sidebar-link>
-     <sidebar-link v-if="isAdmin()" to="/scanner/table-list">
+     <sidebar-link to="/scanner/table-list">
         <i class="nc-icon nc-notes"></i>
         <p>User List</p>
       </sidebar-link>

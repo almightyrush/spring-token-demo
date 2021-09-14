@@ -74,6 +74,9 @@
           this.$notify({type:'error',text: error});
         });
       },
+    },
+    created() {
+      this.searchBlocked();
     }
   }
 </script>

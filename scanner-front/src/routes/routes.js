@@ -36,7 +36,7 @@ const routes = [
         component: UserProfile
       },
       {
-        path: 'restaurant',
+        path: 'hotel',
         name: 'Restaurant',
         component: Restaurant
       },
