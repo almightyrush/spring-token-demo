@@ -22,9 +22,12 @@ public class LicenseResponseDto {
     private Boolean isBlocked;
 
     private Long licenseId;
+    private String reason;
+
 
     public LicenseResponseDto(String fullName, String licenseNumber, String address1, String address2,
-                              String country, String city, String postalCode, Boolean isBlocked, Long licenseId) {
+                              String country, String city, String postalCode, Boolean isBlocked, Long licenseId,
+                              String reason) {
         this.fullName = fullName;
         this.licenseNumber = licenseNumber;
         this.address1 = address1;
@@ -34,6 +37,7 @@ public class LicenseResponseDto {
         this.city = city;
         this.isBlocked = isBlocked;
         this.licenseId = licenseId;
+        this.reason = reason;
     }
 
 }
