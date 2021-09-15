@@ -39,9 +39,11 @@ public class LicenseService {
         Optional<BlockedLicenses> blockedLicensesOptional = licenseRepo.findByLicenseIgnoreCase(license.getLicenseNumber());
         if (blockedLicensesOptional.isPresent()) {
             BlockedLicenses blockedLicenses = blockedLicensesOptional.get();
-            return new LicenseResponseDto(license.getFullName(), license.getLicenseNumber(), license.getCity(), true, blockedLicenses.getId());
+            return new LicenseResponseDto(license.getFullName(), license.getLicenseNumber(), license.getAddress1(),
+                    license.getAddress2(), license.getCountry(), license.getCity(), license.getPostalCode(), true, blockedLicenses.getId());
         }
-        return new LicenseResponseDto(license.getFullName(), license.getLicenseNumber(), license.getCity(), false);
+        return new LicenseResponseDto(license.getFullName(), license.getLicenseNumber(), license.getAddress1(),
+                license.getAddress2(), license.getCountry(), license.getCity(), license.getPostalCode(), false, null);
     }
 
     public String deleteBlockedLicense(Long id) {
