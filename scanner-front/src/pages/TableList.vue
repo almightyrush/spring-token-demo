@@ -2,7 +2,7 @@
   <div class="content">
     <div class="container-fluid">
       <div class="row">
-        <div class="col-10">
+        <div class="col-12">
           <card>
             <template slot="header">
               <h4 class="card-title margin-it">Blocked License 
@@ -35,7 +35,7 @@
     },
     data () {
       return {
-        columns: ['fullName', 'city' , 'license', 'reason','action'],
+        columns: ['fullName', 'license','city' , 'country', 'address1', 'address2','postalCode' ,'reason','action'],
         tableData: [],
         options: {
             filterable: false,
@@ -45,13 +45,13 @@
               dropdown: false,
               show: true,
             },
-            columnsClasses: {
-              'fullName': 'fullNameClass',
-              'city': 'fullNameClass',
-              'license': 'fullNameClass',
-              'reason': 'fullNameClass',
-              'action': 'fullNameClass'
-            }
+            // columnsClasses: {
+            //   'fullName': 'fullNameClass',
+            //   'city': 'fullNameClass',
+            //   'license': 'fullNameClass',
+            //   'reason': 'fullNameClass',
+            //   'action': 'fullNameClass'
+            // }
         },
         header: { headers: AuthHeader() },
       }

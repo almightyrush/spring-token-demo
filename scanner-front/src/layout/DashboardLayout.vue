@@ -15,7 +15,11 @@
       </sidebar-link>
      <sidebar-link to="/scanner/table-list">
         <i class="nc-icon nc-notes"></i>
-        <p>User List</p>
+        <p>Blocked License List</p>
+      </sidebar-link>
+      <sidebar-link to="/scanner/block-license">
+        <i class="nc-icon nc-single-02"></i>
+        <p>Block License</p>
       </sidebar-link>
     </side-bar>
     <div class="main-panel">

@@ -4,6 +4,7 @@ import NotFound from '../pages/NotFoundPage.vue'
 
 // Admin pages
 import Overview from 'src/pages/Overview.vue'
+import BlockLicense from 'src/pages/BlockLicense.vue'
 import UserProfile from 'src/pages/UserProfile.vue'
 import TableList from 'src/pages/TableList.vue'
 import Restaurant from 'src/pages/RestaurantProfile.vue'
@@ -39,6 +40,11 @@ const routes = [
         path: 'hotel',
         name: 'Restaurant',
         component: Restaurant
+      },
+      {
+        path: 'block-license',
+        name: 'BlockLicense',
+        component: BlockLicense
       },
       {
         path: 'table-list',

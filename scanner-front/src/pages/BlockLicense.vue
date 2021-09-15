@@ -2,63 +2,61 @@
 <div class="content">
     <div class="container-fluid">
       <div class="row">
-        <div class="col-md-12">
+        <div class="col-md-10">
           <card>
-            <!-- <input type="text"  v-model="inputText"> -->
-            <h4 slot="header" class="card-title">Scan License</h4>
+            <h4 slot="header" class="card-title">Block License</h4>
             <form>
+            <hr/> 
               <div class="row">
-                <div class="col-md-12">
-                  <base-input type="text" ref="search"
-                            placeholder="Search" v-model="inputText">
-                  </base-input>
-                </div>
-                <!-- <div class="col-md-4 d-flex justify-content-left align-items-center" style="margin-top: 10px;">
-                  <button type="submit" class=" btn btn-info btn-fill float-left"  @click="foucsIt">
-                  Search
-                </button>
-                </div> -->
-              </div>
-              <!-- custom modal for popup -->
-              <div class="text-center">
-                <main-modal name="Custom-modal"
-                :width="500"
-                :height="250"
-                :adaptive="true"
-                styles ="background-color:indianred">
-                <div class="text-center modal-style">
-                  <h3 slot="header" class="card-title warning-style">{{toggleValue}}</h3>
-                </div>
-                </main-modal>
-              </div><hr/> 
-<!-- 
-              <div class="row">
-                <div class="col-md-9">
+                <div class="col-md-10">
                   <base-input type="text"
                             label="Name"
-                            placeholder="Name" v-model="user.fullName"
-                            disabled>
+                            placeholder="Name" v-model="user.fullName">
                   </base-input>
                 </div>
               </div>
               <div class="row">
-                <div class="col-md-6">
+                <div class="col-md-4">
                   <base-input type="text"
                             label="License"
-                            placeholder="License" v-model="user.licenseNumber"
-                            disabled>
+                            placeholder="License" v-model="user.licenseNumber">
+                  </base-input>
+                </div>
+                 <div class="col-md-3">
+                  <base-input type="text"
+                            label="Coutry"
+                            placeholder="Country" v-model="user.country">
                   </base-input>
                 </div>
                 <div class="col-md-3">
                   <base-input type="text"
                             label="City"
-                            placeholder="City" v-model="user.city"
-                            disabled>
+                            placeholder="City" v-model="user.city">
                   </base-input>
                 </div>
               </div>
               <div class="row">
-                <div class="col-md-9">
+                <div class="col-md-5">
+                  <base-input type="text"
+                            label="Address Line 1"
+                            placeholder="Address Line 1" v-model="user.address1">
+                  </base-input>
+                </div>
+                <div class="col-md-5">
+                  <base-input type="text"
+                            label="Address Line 2"
+                            placeholder="Address Line 2" v-model="user.address2">
+                  </base-input>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-2">
+                  <base-input type="text"
+                            label="Zip Code"
+                            placeholder="Zip Code" v-model="user.postalCode">
+                  </base-input>
+                </div>
+                <div class="col-md-8">
                   <base-input type="text"
                             label="Reason"
                             placeholder="Reason" v-model="user.reason">
@@ -67,17 +65,11 @@
               </div>
               <div class="row">
                 <div class="col-md-2">
-                  <button type="submit" class="btn btn-danger btn-fill float-left"  @click="blockUser" :disabled="enableBlock">
+                  <button type="submit" class="btn btn-danger btn-fill float-left"  @click="blockUser">
                   Block
               </button>
                 </div>
-                <div class="col-md-2">
-                  <button type="submit" class="btn btn-success btn-fill float-left"  @click="unblockUser" :disabled="enableUnblock">
-                  UnBlock
-              </button>
-                </div>
-              </div> -->
-              
+              </div>
             </form>
           </card>
         </div>
@@ -101,7 +93,11 @@ export default {
           city: '',
           isBlocked: false,
           licenseId: '',
-          reason: ''
+          reason: '',
+          country: '',
+          address1: '',
+          address2: '',
+          postalCode: ''
         },
         blockTheUser: {
             reason:'',
@@ -110,7 +106,11 @@ export default {
             },
             license: '',
             fullName: '',
-            city: ''
+            city: '',
+            country: '',
+            address1: '',
+            address2: '',
+            postalCode: ''
         },
         enableUnblock: true,
         enableBlock: true,
@@ -143,34 +143,10 @@ export default {
         this.$router.push({name: 'Login'});
       });
     },
-    showModal() {
-      let input = {
-        text: this.inputText
-      }
-      this.$http.post('api/parse', input, this.header).then(response => {
-        if (response.data.isBlocked) {
-          const data = response.data;
-          this.user.city= data.city
-          this.user.fullName= data.fullName
-          this.user.isBlocked= data.isBlocked
-          this.user.licenseId= data.licenseId
-          this.user.licenseNumber= data.licenseNumber
-          this.user.reason = data.reason
-          this.toggleValue = 'License is blocked';
-          this.$modal.show('Custom-modal');
-          this.enableUnblock = false;
-          this.enableBlock = true;
-        }
-        else {
-          this.$notify({type:'success',text: 'License is not blocked'});
-        }
-        }).catch((error) => {
-        this.$notify({type:'error',text: error});
-      });
-    },
     blockUser() {
       const userid = JSON.parse(localStorage.getItem('token'));
-      if (this.user.reason === '') {
+      if (this.user.reason === '' || this.user.fullName === '' || this.user.license === '' || this.user.city === ''
+      ||this.user.country === '' || this.user.postalCode === '' || this.user.address1 === '' || this.user.address2 === '') {
         this.$notify({type:'warning',text: 'Input field is empty'});
       } 
       else {
@@ -179,6 +155,10 @@ export default {
         this.blockTheUser.fullName = this.user.fullName
         this.blockTheUser.reason = this.user.reason
         this.blockTheUser.user.id = userid.id;
+        this.blockTheUser.address1 = this.user.address1;
+        this.blockTheUser.address2 = this.user.address2;
+        this.blockTheUser.postalCode = this.user.postalCode;
+        this.blockTheUser.country = this.user.country;
         this.$http.post('api/blockLicense', this.blockTheUser, this.header).then(response => {
           if (response) {
             this.$notify({type:'success',text: 'License is blocked'});
@@ -188,16 +168,6 @@ export default {
           this.$notify({type:'error',text: 'License is already blocked'});
         });
       }
-    },
-    unblockUser() {
-        this.$http.delete('api/blockLicense'+ '?licenseId=' + this.user.licenseId, this.header).then(response => {
-          if (response) {
-            this.$notify({type:'success',text: 'License is unblocked'});
-            this.user = {}
-          }
-          }).catch((error) => {
-          this.$notify({type:'error',text: error});
-        });
     }
   },
   computed: {
@@ -208,16 +178,6 @@ export default {
   },
   created() {
     this.isLogin();
-  },
-  watch: {
-    inputText(newValue, oldValue) {
-      if (newValue !== oldValue && newValue !== '') {
-        this.showModal();
-        this.$nextTick(() => {
-          this.inputText = ''
-        });;
-      }
-    }
   },
 }
 </script>
