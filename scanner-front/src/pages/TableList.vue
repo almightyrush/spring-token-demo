@@ -6,7 +6,8 @@
           <card>
             <template slot="header">
               <h4 class="card-title margin-it">Blocked License 
-              <button type="submit" class="btn btn-info btn-fill float-right"  @click="searhBlocked"> Search </button></h4> 
+              <!-- <button type="submit" class="btn btn-info btn-fill float-right"  @click="searhBlocked"> Search </button> -->
+              </h4> 
             </template>
              <div class="col-12">
             <v-client-table :columns="columns" :data="tableData" :options="options" >
@@ -75,9 +76,12 @@
         });
       },
     },
-    created() {
-      this.searchBlocked();
+    mounted() {
+      this.searhBlocked();
     }
+    // created() {
+    //   this.searchBlocked();
+    // }
   }
 </script>
 <style>

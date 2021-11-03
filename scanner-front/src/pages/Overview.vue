@@ -3,21 +3,20 @@
     <div class="container-fluid">
       <div class="row">
         <div class="col-md-12">
-          <card>
+          <card style="height: 500px;">
             <!-- <input type="text"  v-model="inputText"> -->
             <h4 slot="header" class="card-title">Scan License</h4>
             <form>
-              <div class="row">
+              <div>
                 <div class="col-md-12">
-                  <base-input type="text" ref="search"
-                            placeholder="Search" v-model="inputText">
-                  </base-input>
+                  <input type="text" ref="search" class="selector" v-model="inputText">
+                  
                 </div>
-                <!-- <div class="col-md-4 d-flex justify-content-left align-items-center" style="margin-top: 10px;">
-                  <button type="submit" class=" btn btn-info btn-fill float-left"  @click="foucsIt">
+                <div class="col-md-4 d-flex justify-content-left align-items-center" style="margin-top: 10px;">
+                  <button type="submit" class=" btn btn-info btn-fill float-left left-padding"  @click="showModal">
                   Search
                 </button>
-                </div> -->
+                </div>
               </div>
               <!-- custom modal for popup -->
               <div class="text-center">
@@ -30,54 +29,7 @@
                   <h3 slot="header" class="card-title warning-style">{{toggleValue}}</h3>
                 </div>
                 </main-modal>
-              </div><hr/> 
-<!-- 
-              <div class="row">
-                <div class="col-md-9">
-                  <base-input type="text"
-                            label="Name"
-                            placeholder="Name" v-model="user.fullName"
-                            disabled>
-                  </base-input>
-                </div>
               </div>
-              <div class="row">
-                <div class="col-md-6">
-                  <base-input type="text"
-                            label="License"
-                            placeholder="License" v-model="user.licenseNumber"
-                            disabled>
-                  </base-input>
-                </div>
-                <div class="col-md-3">
-                  <base-input type="text"
-                            label="City"
-                            placeholder="City" v-model="user.city"
-                            disabled>
-                  </base-input>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-md-9">
-                  <base-input type="text"
-                            label="Reason"
-                            placeholder="Reason" v-model="user.reason">
-                  </base-input>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-md-2">
-                  <button type="submit" class="btn btn-danger btn-fill float-left"  @click="blockUser" :disabled="enableBlock">
-                  Block
-              </button>
-                </div>
-                <div class="col-md-2">
-                  <button type="submit" class="btn btn-success btn-fill float-left"  @click="unblockUser" :disabled="enableUnblock">
-                  UnBlock
-              </button>
-                </div>
-              </div> -->
-              
             </form>
           </card>
         </div>
@@ -160,13 +112,22 @@ export default {
           this.$modal.show('Custom-modal');
           this.enableUnblock = false;
           this.enableBlock = true;
+          this.inputText = '';
         }
         else {
           this.$notify({type:'success',text: 'License is not blocked'});
+          this.inputText = '';
         }
         }).catch((error) => {
         this.$notify({type:'error',text: error});
       });
+    },
+    parseText(text) {
+      let start = '%';
+      text = start.concat(text);
+      let end = '?';
+      text = text.concat(end);
+      return text;
     },
     blockUser() {
       const userid = JSON.parse(localStorage.getItem('token'));
@@ -210,14 +171,14 @@ export default {
     this.isLogin();
   },
   watch: {
-    inputText(newValue, oldValue) {
-      if (newValue !== oldValue && newValue !== '') {
-        this.showModal();
-        this.$nextTick(() => {
-          this.inputText = ''
-        });;
-      }
-    }
+    // inputText(newValue, oldValue) {
+    //   if (newValue !== oldValue && newValue !== '') {
+    //     this.showModal();
+    //     this.$nextTick(() => {
+    //       this.inputText = ''
+    //     });;
+    //   }
+    // }
   },
 }
 </script>
@@ -236,7 +197,6 @@ export default {
     height: 100%;
     width: 100%;
     position: fixed;
-    /* color: transparent; */
     background-color: transparent;
     border: none;
   }
@@ -244,4 +204,12 @@ export default {
     color: red;
     font-size: bold;
   }
+  .left-padding {
+    margin-left: 7px;
+  }
+  .selector { 
+    height: 300px; 
+    width: 700px;
+    border: 1px solid lightgray;
+    }
 </style>
