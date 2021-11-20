@@ -9,11 +9,11 @@
             <form>
               <div>
                 <div class="col-md-12">
-                  <input type="text" ref="search" class="selector" v-model="inputText">
-                  
+                  <textarea ref="search" class="selector" v-model="inputText">
+                  </textarea>
                 </div>
                 <div class="col-md-4 d-flex justify-content-left align-items-center" style="margin-top: 10px;">
-                  <button type="submit" class=" btn btn-info btn-fill float-left left-padding"  @click="showModal">
+                  <button type="button" class=" btn btn-info btn-fill float-left left-padding"  @click="showModal">
                   Search
                 </button>
                 </div>

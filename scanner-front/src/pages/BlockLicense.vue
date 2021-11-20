@@ -65,7 +65,7 @@
               </div>
               <div class="row">
                 <div class="col-md-2">
-                  <button type="submit" class="btn btn-danger btn-fill float-left"  @click="blockUser">
+                  <button type="button" class="btn btn-danger btn-fill float-left"  @click="blockUser">
                   Block
               </button>
                 </div>
@@ -146,7 +146,7 @@ export default {
     blockUser() {
       const userid = JSON.parse(localStorage.getItem('token'));
       if (this.user.reason === '' || this.user.fullName === '' || this.user.license === '' || this.user.city === ''
-      ||this.user.country === '' || this.user.postalCode === '' || this.user.address1 === '' || this.user.address2 === '') {
+      ||this.user.country === '' || this.user.postalCode === '' || this.user.address1 === '') {
         this.$notify({type:'warning',text: 'Input field is empty'});
       } 
       else {
