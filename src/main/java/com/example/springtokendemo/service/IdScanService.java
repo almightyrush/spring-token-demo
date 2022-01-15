@@ -1,19 +1,17 @@
-package com.example.springtokendemo.service;
+/*package com.example.springtokendemo.service;
 
 import com.example.springtokendemo.model.dto.DriverLicense;
-import com.example.springtokendemo.model.dto.Request;
 import com.example.springtokendemo.model.dto.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.beans.Encoder;
 import java.util.Base64;
 
-@Service
-public class IdScanService {
+//@Service
+public class IdScanService
+{
 
     @Autowired
     private RestTemplate restTemplate;
@@ -24,7 +22,9 @@ public class IdScanService {
     @Value("${idScan.authKey}")
     private String authKey;
 
-    public DriverLicense getLicense(String text) throws Exception {
+
+    public DriverLicense getLicense(String text) throws Exception
+    {
         Base64.Encoder base64 = java.util.Base64.getEncoder();
         String encodedString = base64.encodeToString(text.getBytes());
 
@@ -34,12 +34,16 @@ public class IdScanService {
 
         ResponseEntity<Response> response = null;
 
-        try {
+        try
+        {
             response = restTemplate.postForEntity(idScanUrl, request, Response.class);
-            if (response.getStatusCode().is2xxSuccessful()) {
+            if (response.getStatusCode().is2xxSuccessful())
+            {
                 return response.getBody().getParseResult().getDriverLicense();
             }
-        } catch (Exception e) {
+        }
+        catch (Exception e)
+        {
             e.printStackTrace();
             throw new Exception("Text cannot be parsed");
         }
@@ -48,3 +52,4 @@ public class IdScanService {
     }
 
 }
+*/

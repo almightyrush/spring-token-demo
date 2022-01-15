@@ -2,7 +2,7 @@ package com.example.springtokendemo.controllers;
 
 import com.example.springtokendemo.model.BlockedLicenses;
 import com.example.springtokendemo.model.dto.LicenseResponseDto;
-import com.example.springtokendemo.model.dto.Request;
+import com.example.springtokendemo.model.dto.LicenseRequestDto;
 import com.example.springtokendemo.service.LicenseService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -47,10 +47,10 @@ public class LicenseController {
         }
     }
 
-    @PostMapping(value = "/parse")
-    public ResponseEntity<LicenseResponseDto> parse(@RequestBody Request request) {
+    @PostMapping(value = "/license/check")
+    public ResponseEntity<LicenseResponseDto> check(@RequestBody LicenseRequestDto request) {
         try {
-            return new ResponseEntity<>(licenseService.parseText(request.getText()), HttpStatus.OK);
+            return new ResponseEntity<>(licenseService.licenseCheck(request), HttpStatus.OK);
         } catch (Exception e) {
             Map<String, String> map = new HashMap<>();
             map.put("status", "false");
