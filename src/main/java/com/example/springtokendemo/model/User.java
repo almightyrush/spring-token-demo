@@ -1,20 +1,20 @@
 package com.example.springtokendemo.model;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
-@Table(	name = "users",
-        uniqueConstraints = {
-                @UniqueConstraint(columnNames = "username"),
-                @UniqueConstraint(columnNames = "email")
-        })
-public class User {
+@Table(name = "users",
+    uniqueConstraints = {
+        @UniqueConstraint(columnNames = "username"),
+        @UniqueConstraint(columnNames = "email")
+    })
+public class User
+{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -33,9 +33,9 @@ public class User {
     private String password;
 
     @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(	name = "user_roles",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id"))
+    @JoinTable(name = "user_roles",
+        joinColumns = @JoinColumn(name = "user_id"),
+        inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
 
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
@@ -46,17 +46,26 @@ public class User {
 
     private String lastName;
 
-    public User() {
+    private Boolean isActive = true;
+
+
+    public User()
+    {
     }
 
-    public User(String username, String email, String password) {
+
+    public User(String username, String email, String password)
+    {
         this.username = username;
         this.email = email;
         this.password = password;
     }
 
-    public User(String username, String email, String password,
-                Restaurant restaurant, String firstName, String lastName) {
+
+    public User(
+        String username, String email, String password,
+        Restaurant restaurant, String firstName, String lastName)
+    {
         this.username = username;
         this.email = email;
         this.password = password;
@@ -65,70 +74,115 @@ public class User {
         this.lastName = lastName;
     }
 
-    public Long getId() {
+
+    public Long getId()
+    {
         return id;
     }
 
-    public void setId(Long id) {
+
+    public void setId(Long id)
+    {
         this.id = id;
     }
 
-    public String getUsername() {
+
+    public String getUsername()
+    {
         return username;
     }
 
-    public void setUsername(String username) {
+
+    public void setUsername(String username)
+    {
         this.username = username;
     }
 
-    public String getEmail() {
+
+    public String getEmail()
+    {
         return email;
     }
 
-    public void setEmail(String email) {
+
+    public void setEmail(String email)
+    {
         this.email = email;
     }
 
-    public String getPassword() {
+
+    public String getPassword()
+    {
         return password;
     }
 
-    public void setPassword(String password) {
+
+    public void setPassword(String password)
+    {
         this.password = password;
     }
 
-    public Set<Role> getRoles() {
+
+    public Set<Role> getRoles()
+    {
         return roles;
     }
 
-    public void setRoles(Set<Role> roles) {
+
+    public void setRoles(Set<Role> roles)
+    {
         this.roles = roles;
     }
 
-    public Restaurant getRestaurant() {
+
+    public Restaurant getRestaurant()
+    {
         return restaurant;
     }
 
-    public User setRestaurant(Restaurant restaurant) {
+
+    public User setRestaurant(Restaurant restaurant)
+    {
         this.restaurant = restaurant;
         return this;
     }
 
-    public String getFirstName() {
+
+    public String getFirstName()
+    {
         return firstName;
     }
 
-    public User setFirstName(String firstName) {
+
+    public User setFirstName(String firstName)
+    {
         this.firstName = firstName;
         return this;
     }
 
-    public String getLastName() {
+
+    public String getLastName()
+    {
         return lastName;
     }
 
-    public User setLastName(String lastName) {
+
+    public User setLastName(String lastName)
+    {
         this.lastName = lastName;
+        return this;
+    }
+
+
+    public Boolean getActive()
+    {
+        return isActive;
+    }
+
+
+    public User setActive(Boolean active)
+    {
+        this.isActive = active;
         return this;
     }
 }

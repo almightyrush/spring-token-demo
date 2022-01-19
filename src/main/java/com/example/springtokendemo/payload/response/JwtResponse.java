@@ -1,5 +1,7 @@
 package com.example.springtokendemo.payload.response;
 
+import com.example.springtokendemo.model.Restaurant;
+
 import java.util.List;
 
 public class JwtResponse {
@@ -9,13 +11,16 @@ public class JwtResponse {
 	private String username;
 	private String email;
 	private List<String> roles;
+	private Restaurant restaurant;
 
-	public JwtResponse(String accessToken, Long id, String username, String email, List<String> roles) {
+	public JwtResponse(String accessToken, Long id, String username, String email, List<String> roles,
+		Restaurant restaurant) {
 		this.token = accessToken;
 		this.id = id;
 		this.username = username;
 		this.email = email;
 		this.roles = roles;
+		this.restaurant = restaurant;
 	}
 
 	public String getAccessToken() {
@@ -61,4 +66,11 @@ public class JwtResponse {
 	public List<String> getRoles() {
 		return roles;
 	}
+
+
+	public Restaurant getRestaurant()
+	{
+		return restaurant;
+	}
+
 }

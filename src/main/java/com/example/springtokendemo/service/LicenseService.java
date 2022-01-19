@@ -1,8 +1,10 @@
 package com.example.springtokendemo.service;
 
 import com.example.springtokendemo.model.BlockedLicenses;
+import com.example.springtokendemo.model.dto.BlockedLicenseResponse;
 import com.example.springtokendemo.model.dto.LicenseRequestDto;
 import com.example.springtokendemo.model.dto.LicenseResponseDto;
+import com.example.springtokendemo.model.dto.UserDto;
 import com.example.springtokendemo.repository.LicenseRepo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,20 +36,25 @@ public class LicenseService
     }
 
 
-    public BlockedLicenses blockLicense(BlockedLicenses blockedLicensesRequest) throws Exception
+    public BlockedLicenseResponse blockLicense(BlockedLicenses blockedLicensesRequest) throws Exception
     {
         Optional<BlockedLicenses> blockedLicenses = licenseRepo.findByLicenseIgnoreCase(blockedLicensesRequest.getLicense());
         if (blockedLicenses.isPresent())
         {
             throw new Exception("License is already blocked");
         }
-        return licenseRepo.save(blockedLicensesRequest);
+        return blockedLicenseResponseBuilder(licenseRepo.save(blockedLicensesRequest));
     }
 
 
-    public List<BlockedLicenses> getAllBlockedLicenses()
+    public List<BlockedLicenseResponse> getAllBlockedLicenses()
     {
-        return licenseRepo.findAll();
+        return licenseRepo.findAllByOrderByCreatedAtDesc()
+            .stream().limit(10)
+            .collect(Collectors.toList())
+            .stream()
+            .map(l -> blockedLicenseResponseBuilder(l))
+            .collect(Collectors.toList());
     }
 
 
@@ -75,5 +82,25 @@ public class LicenseService
             .stream()
             .map(e -> generateResponse(e))
             .collect(Collectors.toList());
+    }
+
+
+    private BlockedLicenseResponse blockedLicenseResponseBuilder(BlockedLicenses savedLicense)
+    {
+        return BlockedLicenseResponse.builder()
+            .license(savedLicense.getLicense())
+            .address1(savedLicense.getAddress1())
+            .address2(savedLicense.getAddress2())
+            .id(savedLicense.getId())
+            .city(savedLicense.getCity())
+            .country(savedLicense.getCountry())
+            .fullName(savedLicense.getFullName())
+            .reason(savedLicense.getReason())
+            .postalCode(savedLicense.getPostalCode())
+            .user(UserDto.builder().id(savedLicense.getUser().getId())
+                .firstName(savedLicense.getUser().getFirstName())
+                .restaurant(savedLicense.getUser().getRestaurant())
+                .id(savedLicense.getUser().getId()).build())
+            .build();
     }
 }

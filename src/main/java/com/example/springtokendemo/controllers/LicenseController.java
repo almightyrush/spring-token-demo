@@ -1,6 +1,7 @@
 package com.example.springtokendemo.controllers;
 
 import com.example.springtokendemo.model.BlockedLicenses;
+import com.example.springtokendemo.model.dto.BlockedLicenseResponse;
 import com.example.springtokendemo.model.dto.LicenseRequestDto;
 import com.example.springtokendemo.model.dto.LicenseResponseDto;
 import com.example.springtokendemo.service.LicenseService;
@@ -28,7 +29,7 @@ public class LicenseController
 
 
     @PostMapping("/blockLicense")
-    public ResponseEntity<BlockedLicenses> blockLicense(@RequestBody BlockedLicenses blockedLicenses)
+    public ResponseEntity<BlockedLicenseResponse> blockLicense(@RequestBody BlockedLicenses blockedLicenses)
     {
         try
         {
@@ -45,7 +46,7 @@ public class LicenseController
 
 
     @GetMapping(value = "/blockLicense")
-    public ResponseEntity<List<BlockedLicenses>> getAllBlockLicense()
+    public ResponseEntity<List<BlockedLicenseResponse>> getAllBlockLicense()
     {
         try
         {

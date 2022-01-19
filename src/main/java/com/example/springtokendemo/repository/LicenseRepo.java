@@ -13,6 +13,8 @@ public interface LicenseRepo extends JpaRepository<BlockedLicenses, Long> {
 
     Optional<BlockedLicenses> findByLicenseIgnoreCase(String license);
 
+    List<BlockedLicenses> findAllByOrderByCreatedAtDesc();
+
     @Query("SELECT b FROM BlockedLicenses b WHERE b.license LIKE lower(concat('%', concat(:query, '%'))) "
         + "or b.fullName LIKE lower(concat('%', concat(:query, '%'))) "
         + "or b.city LIKE lower(concat('%', concat(:query, '%')))")
