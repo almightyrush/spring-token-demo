@@ -51,6 +51,45 @@
           </base-input>
         </div>
       </div>
+      <div class="row">
+        <div class="col-md-3">
+          <base-input type="text"
+                    label="Username"
+                    placeholder="Username"
+                    v-model="user.username">
+          </base-input>
+        </div>
+        <div class="col-md-3">
+          <base-input type="password"
+                    label="Password"
+                    placeholder="Password"
+                    v-model="user.password">
+          </base-input>
+        </div>
+        <div class="col-md-6">
+          <base-input type="email"
+                    label="Email"
+                    placeholder="Email"
+                    v-model="user.email">
+          </base-input>
+        </div>
+      </div>
+      <div class="row">
+         <div class="col-md-3">
+          <base-input type="pin"
+                    label="pin"
+                    placeholder="PIN"
+                    v-model="user.pin">
+          </base-input>
+        </div>
+        <div class="col-md-4">
+          <label>Scanner Type</label> 
+            <select class="form-control form-control-sm" v-model="user.scannerType">
+             <option class="form-control" value="scanner_1" selected>scanner 1 </option>
+              <option class="form-control" value="scanner_2">scanner 2</option>
+          </select>
+        </div>
+      </div>
       <div class="text-center">
         <button type="submit" class="btn btn-info btn-fill float-right" @click.prevent="checkValidation">
           Add Hotel
@@ -75,7 +114,12 @@
           address2:'',
           country: '',
           city: '',
-          zipCode: ''
+          zipCode: '',
+          email: '',
+          username: '',
+          password: '',
+          pin: '',
+          scannerType: 'scanner_1'
         },
         header: {
           headers: AuthHeader()
@@ -84,8 +128,8 @@
     },
     methods:{
       checkValidation() {
-        if (this.user.name === '' || this.user.address1 === '' || this.user.address2 === ''
-        || this.user.country === '' || this.user.city === '' || this.user.zipcode === '') {
+        if (this.user.name === '' || this.user.address1 === '' || this.user.username === '' || this.user.email === ''
+        || this.user.country === '' || this.user.city === '' || this.user.password === '' || this.user.pin === '') {
           this.$notify({type:'warning',text: 'Fields are empty'});
         }
         else {

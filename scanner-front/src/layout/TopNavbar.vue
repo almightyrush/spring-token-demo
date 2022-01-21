@@ -13,6 +13,25 @@
         <span class="navbar-toggler-bar burger-lines"></span>
         <span class="navbar-toggler-bar burger-lines"></span>
       </button> -->
+      <div class="collapse navbar-collapse justify-content-end input-city">
+        <div class="form-outline">
+          <input type="search" class="form-control" v-model="searchCriteria" placeholder="Search" />
+          <div class="cities-list" v-if="false">
+             <span
+              v-for="city in city"
+              :key="city.id"
+              @click="searchUser(city)"
+              class="city-item form-control"
+            >
+            {{city.name}} hello <br>
+             </span>
+          </div>
+        </div>
+        <!-- <button type="button" class="btn btn-primary" @click="searchUser">
+          <i class="fa fa-search"></i>
+        </button> -->
+      </div>
+
       <div class="collapse navbar-collapse justify-content-end">
         <ul class="nav navbar-nav mr-auto">
         </ul>
@@ -24,6 +43,7 @@
           </li>
         </ul>
       </div>
+      
     </div>
   </nav>
 </template>
@@ -37,10 +57,33 @@
     },
     data () {
       return {
-        activeNotifications: false
+        activeNotifications: false,
+        isLoading: true,
+        searchCriteria: '',
+        isOpen: false,
+        results: [],
+        search: "",
+        arrowCounter: 0,
+        city: [
+          {
+            id: 1,
+            name: 'india india india india'
+          },
+          {
+            id: 2,
+            name: 'USA'
+          },
+          {
+            id: 3,
+            name: 'AFG'
+          }
+        ]
       }
     },
     methods: {
+      searchUser(user) {
+        console.log(user);
+      },
       logout(){
         this.$router.push({name: 'Login'});
       },
@@ -58,11 +101,23 @@
       },
       hideSidebar () {
         this.$sidebar.displaySidebar(false)
-      }
+      },
     }
   }
 
 </script>
-<style>
-
+<style scoped>
+  .search-result {
+    position: absolute;
+    z-index: 1;
+  }
+  .input-city .cities-list {
+    position: absolute;
+    z-index: 1;
+  }
+  .city-item {
+    border: 1px solid #E3E3E3;
+    width: 200px;
+    height: auto;
+  }
 </style>

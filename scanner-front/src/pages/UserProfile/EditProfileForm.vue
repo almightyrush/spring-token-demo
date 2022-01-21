@@ -42,22 +42,22 @@
           </base-input>
         </div>
       </div>
-      <div class="row">
+      <!-- <div class="row">
         <div class="col-md-4">
           <label>Role</label>
           <select class="form-control form-control-sm" v-model="selectedRole">
               <option value="User">User</option>
               <option value="Admin">Admin</option>
             </select>
-        </div>
-        <div class="col-md-4">
+        </div> -->
+        <!-- <div class="col-md-4">
           <label>Restaurant</label>
             <select class="form-control form-control-sm" v-model="user.restaurant">
             <option 
             v-for="(restaurant) in allRestaurant"  :value="restaurant"
             :key="restaurant.name">{{restaurant.name}}</option>
           </select>
-        </div>
+        </div> -->
       </div>
       <div class="text-center">
         <button type="submit" class="btn btn-info btn-fill float-right" @click.prevent="checkValidation">

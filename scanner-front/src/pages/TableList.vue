@@ -16,7 +16,23 @@
                   Unblock
                 </button>
               </span>
-            </v-client-table> 
+            </v-client-table>
+            <div>
+                <main-modal name="Custom-modal"
+                :width="520"
+                :height="210"
+                :adaptive="true">
+                  <div class="modal-dialog modal-content">
+                      <div class="modal-body">
+                        <label>Enter password to unblock</label>
+                        <base-input type="password"
+                            placeholder="Password">
+                        </base-input>
+                        <button type="button" class="btn btn-success btn-fill">Unblock</button>
+                      </div>
+                  </div>
+                </main-modal>
+            </div>
              </div>
           </card>
         </div>
@@ -66,14 +82,15 @@
         });
       },
       blockUser(data) {
-         this.$http.delete('api/blockLicense'+ '?licenseId=' + data.row.id, this.header).then(response => {
-          if (response) {
-            this.$notify({type:'success',text: 'License is unblocked'});
-            this.searhBlocked();
-          }
-          }).catch((error) => {
-          this.$notify({type:'error',text: error});
-        });
+        this.$modal.show('Custom-modal');
+        // this.$http.delete('api/blockLicense'+ '?licenseId=' + data.row.id, this.header).then(response => {
+        //   if (response) {
+        //     this.$notify({type:'success',text: 'License is unblocked'});
+        //     this.searhBlocked();
+        //   }
+        //   }).catch((error) => {
+        //   this.$notify({type:'error',text: error});
+        // });
       },
     },
     mounted() {
@@ -105,5 +122,8 @@
 }
 .fullNameClass{
   width: 20%;
+}
+.border-style {
+  border: 5px solid grey;
 }
 </style>

@@ -5,7 +5,7 @@
         <i class="nc-icon nc-badge"></i>
         <p>Dashboard</p>
       </sidebar-link>
-      <sidebar-link v-if="isAdmin()" to="/scanner/user">
+      <sidebar-link v-if="isAdmin() || isModerator()" to="/scanner/user">
         <i class="nc-icon nc-circle-09"></i>
         <p>Add User</p>
       </sidebar-link>
@@ -57,6 +57,10 @@
       isAdmin() {
         const role = localStorage.getItem('UserRole');
         return role.includes('ROLE_ADMIN');
+      },
+      isModerator() {
+        const role = localStorage.getItem('UserRole');
+        return role.includes('ROLE_MODERATOR');
       },
     }
   }

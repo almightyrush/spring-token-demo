@@ -3,7 +3,8 @@
     <div class="container-fluid">
       <div class="row">
         <div class="col-md-12">
-          <card style="height: 500px;">
+          <!-- v-show=false -->
+          <card v-if="scannerType()" style="height: 500px;">
             <!-- <input type="text"  v-model="inputText"> -->
             <h4 slot="header" class="card-title">Scan License</h4>
             <form>
@@ -18,7 +19,7 @@
                 </button>
                 </div>
               </div>
-              <!-- custom modal for popup -->
+              <!-- custom modal for popup
               <div class="text-center">
                 <main-modal name="Custom-modal"
                 :width="500"
@@ -29,9 +30,91 @@
                   <h3 slot="header" class="card-title warning-style">{{toggleValue}}</h3>
                 </div>
                 </main-modal>
+                </div> -->
+            </form>
+          </card>
+
+          <!-- for form 2 -->
+           <card v-else>
+            <h4 slot="header" class="card-title">Scan License</h4>
+            <form>
+            <hr/> 
+              <div class="row">
+                <div class="col-md-10">
+                  <base-input type="text"
+                            label="Name"
+                            placeholder="FullName" v-model="user.fullName">
+                  </base-input>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-4">
+                  <label id="address" for="address">Address</label> <br/>
+                  <textarea name="address" 
+                    rows="3" 
+                    cols="35" 
+                    style="resize: none;"
+                    class="form-control"
+                    placeholder="Address">
+                  </textarea>
+                </div>
+                <div class="col-md-3">
+                  <base-input type="text"
+                            label="City"
+                            placeholder="City" v-model="user.city">
+                  </base-input>
+                </div>
+                <div class="col-md-3">
+                  <base-input type="text"
+                            label="State"
+                            placeholder="State" v-model="user.state">
+                  </base-input>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-2">
+                  <base-input type="text"
+                            label="Zip Code"
+                            placeholder="Zip Code" v-model="user.postalCode">
+                  </base-input>
+                </div>
+                <div class="col-md-8">
+                  <base-input type="text"
+                              label="License"
+                              placeholder="License" v-model="user.licenseNumber">
+                  </base-input>
+                </div>  
+              </div>
+              <div class="row">
+                <div class="col-md-8">
+                  <base-input type="text"
+                            label="Reason"
+                            placeholder="Reason" v-model="user.reason">
+                  </base-input>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-2">
+                  <button type="button" class="btn btn-danger btn-fill float-left"  @click="blockUser">
+                  Block
+              </button>
+                </div>
               </div>
             </form>
           </card>
+          <div>
+            <main-modal name="Custom-modal"
+            :width="520"
+            :height="170"
+            :adaptive="true">
+              <div class="modal-dialog modal-content" style="background-color: beige;">
+                  <div class="modal-body">
+                    <h3 slot="header" class="card-title warning-style">{{toggleValue}}</h3>
+                  </div>
+              </div>
+            </main-modal>
+          </div>
+           
         </div>
       </div>
     </div>
@@ -73,9 +156,9 @@ export default {
       }
     },
   methods: {
-    isAdmin() {
-      this.role = localStorage.getItem('UserRole')
-      return this.role === 'ROLE_ADMIN'? true : false;
+    scannerType() {
+      this.role = localStorage.getItem('UserRole');
+      return !this.role.includes('ROLE_MODERATOR');
     },
     logout() {
       localStorage.removeItem('token');
@@ -130,6 +213,8 @@ export default {
       return text;
     },
     blockUser() {
+      this.toggleValue = 'License is blocked';
+      this.$modal.show('Custom-modal');
       const userid = JSON.parse(localStorage.getItem('token'));
       if (this.user.reason === '') {
         this.$notify({type:'warning',text: 'Input field is empty'});
@@ -211,5 +296,5 @@ export default {
     height: 300px; 
     width: 700px;
     border: 1px solid lightgray;
-    }
+  }
 </style>
