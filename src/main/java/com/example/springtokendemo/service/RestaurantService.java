@@ -68,7 +68,7 @@ public class RestaurantService
         Restaurant restaurant = new Restaurant();
         restaurant.setName(restaurantRequest.getName());
         restaurant.setZipCode(restaurantRequest.getZipCode());
-        restaurant.setAddress1(restaurant.getAddress1());
+        restaurant.setAddress1(restaurantRequest.getAddress1());
         restaurant.setAddress2(restaurantRequest.getAddress2());
         restaurant.setCountry(restaurantRequest.getCountry());
         restaurant.setCity(restaurantRequest.getCity());
