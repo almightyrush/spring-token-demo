@@ -26,6 +26,7 @@ public class SignupRequest {
 
     private String lastName;
 
+    @NotNull(message = "Please select the restaurant")
     private Restaurant restaurant;
   
     public String getUsername() {
