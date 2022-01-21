@@ -4,6 +4,7 @@ import com.example.springtokendemo.model.BlockedLicenses;
 import com.example.springtokendemo.model.dto.BlockedLicenseResponse;
 import com.example.springtokendemo.model.dto.LicenseRequestDto;
 import com.example.springtokendemo.model.dto.LicenseResponseDto;
+import com.example.springtokendemo.model.dto.PinValidationRequest;
 import com.example.springtokendemo.service.LicenseService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -79,12 +80,12 @@ public class LicenseController
     }
 
 
-    @DeleteMapping("/blockLicense")
-    public ResponseEntity<String> unblockLicense(@RequestParam Long licenseId)
+    @PostMapping("/blockLicense/unblock")
+    public ResponseEntity<String> unblockLicense(@RequestBody PinValidationRequest pinValidationRequest)
     {
         try
         {
-            return new ResponseEntity<>(licenseService.deleteBlockedLicense(licenseId), HttpStatus.OK);
+            return new ResponseEntity<>(licenseService.deleteBlockedLicense(pinValidationRequest), HttpStatus.OK);
         }
         catch (Exception e)
         {

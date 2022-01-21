@@ -1,13 +1,16 @@
 package com.example.springtokendemo.service;
 
 import com.example.springtokendemo.model.BlockedLicenses;
-import com.example.springtokendemo.model.dto.BlockedLicenseResponse;
-import com.example.springtokendemo.model.dto.LicenseRequestDto;
-import com.example.springtokendemo.model.dto.LicenseResponseDto;
-import com.example.springtokendemo.model.dto.UserDto;
+import com.example.springtokendemo.model.Restaurant;
+import com.example.springtokendemo.model.User;
+import com.example.springtokendemo.model.dto.*;
 import com.example.springtokendemo.repository.LicenseRepo;
+import com.example.springtokendemo.repository.RestaurantRepo;
+import com.example.springtokendemo.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,14 +21,21 @@ import java.util.stream.Collectors;
 public class LicenseService
 {
 
+    @Autowired
+    PasswordEncoder encoder;
+
     private static final Logger logger = LoggerFactory.getLogger(LicenseService.class);
 
     private final LicenseRepo licenseRepo;
+    private final RestaurantRepo restaurantRepo;
+    private final UserRepository userRepository;
 
 
-    public LicenseService(LicenseRepo licenseRepo)
+    public LicenseService(LicenseRepo licenseRepo, UserRepository userRepository, RestaurantRepo restaurantRepo)
     {
         this.licenseRepo = licenseRepo;
+        this.userRepository = userRepository;
+        this.restaurantRepo = restaurantRepo;
     }
 
 
@@ -69,10 +79,23 @@ public class LicenseService
     }
 
 
-    public String deleteBlockedLicense(Long id)
+    public String deleteBlockedLicense(PinValidationRequest pinValidationRequest)
     {
-        licenseRepo.delete(licenseRepo.findById(id).orElseThrow(() -> new RuntimeException("License cannot be found")));
-        return "License unblocked successfully";
+        Restaurant restaurant = restaurantRepo.findById(pinValidationRequest.getRestaurantId()).orElseThrow(() -> new RuntimeException("Restaurant cannot be found"));
+        User user = userRepository.findById(pinValidationRequest.getUserId()).orElseThrow(() -> new RuntimeException("User cannot be found"));
+
+        if (user.getActive())
+        {
+            if (encoder.matches(encoder.encode(pinValidationRequest.getPin()), restaurant.getPin()))
+            {
+                licenseRepo.delete(licenseRepo.findById(pinValidationRequest.getLicenceId()).orElseThrow(() -> new RuntimeException("License cannot be found")));
+                return "License unblocked successfully";
+            }
+            else
+                throw new RuntimeException("Pin does not match");
+        }
+
+        throw new RuntimeException("User is not Active");
     }
 
 

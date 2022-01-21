@@ -34,4 +34,8 @@ public class RestaurantRequest
     private String zipCode;
 
     private String country;
+
+    private String pin;
+
+    private String scannerType;
 }

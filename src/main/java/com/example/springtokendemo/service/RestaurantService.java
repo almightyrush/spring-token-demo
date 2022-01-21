@@ -72,6 +72,8 @@ public class RestaurantService
         restaurant.setAddress2(restaurantRequest.getAddress2());
         restaurant.setCountry(restaurantRequest.getCountry());
         restaurant.setCity(restaurantRequest.getCity());
+        restaurant.setPin(encoder.encode(restaurantRequest.getPin()));
+        restaurant.setScannerType(restaurantRequest.getScannerType());
         return restaurant;
     }
 
