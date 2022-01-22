@@ -88,7 +88,7 @@ public class LicenseService
         {
             if (user.getActive())
             {
-                if (encoder.matches(encoder.encode(pinValidationRequest.getPin()), restaurant.getPin()))
+                if (encoder.matches(pinValidationRequest.getPin(), restaurant.getPin()))
                 {
                     Optional<BlockedLicenses> blockedLicenses = licenseRepo.findById(pinValidationRequest.getLicenceId());
                     if (blockedLicenses.isPresent())
