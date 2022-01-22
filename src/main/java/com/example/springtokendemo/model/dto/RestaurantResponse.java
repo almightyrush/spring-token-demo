@@ -12,5 +12,5 @@ public class RestaurantResponse
     private boolean isSuccess;
     private String errorMsg;
 
-    private Restaurant restaurant;
+    private RestaurantDto restaurant;
 }

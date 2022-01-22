@@ -1,12 +1,14 @@
 package com.example.springtokendemo.controllers;
 
 import com.example.springtokendemo.model.ERole;
+import com.example.springtokendemo.model.Restaurant;
 import com.example.springtokendemo.model.Role;
 import com.example.springtokendemo.model.User;
 import com.example.springtokendemo.payload.request.LoginRequest;
 import com.example.springtokendemo.payload.request.SignupRequest;
 import com.example.springtokendemo.payload.response.JwtResponse;
 import com.example.springtokendemo.payload.response.MessageResponse;
+import com.example.springtokendemo.repository.RestaurantRepo;
 import com.example.springtokendemo.repository.RoleRepository;
 import com.example.springtokendemo.repository.UserRepository;
 import com.example.springtokendemo.security.jwt.JwtUtils;
@@ -39,6 +41,8 @@ public class AuthController
 
     @Autowired
     RoleRepository roleRepository;
+
+    @Autowired RestaurantRepo restaurantRepo;
 
     @Autowired
     PasswordEncoder encoder;
@@ -88,11 +92,13 @@ public class AuthController
                 .body(new MessageResponse("Error: Email is already in use!"));
         }
 
+        Restaurant restaurant = restaurantRepo.findById(signUpRequest.getRestaurant().getId()).orElseThrow(() -> new RuntimeException("Hotel cannot be found"));
+
         // Create new user's account
         User user = new User(signUpRequest.getUsername(),
             signUpRequest.getEmail(),
             encoder.encode(signUpRequest.getPassword()),
-            signUpRequest.getRestaurant(), signUpRequest.getFirstName(), signUpRequest.getLastName());
+            restaurant, signUpRequest.getFirstName(), signUpRequest.getLastName());
 
         Set<Role> roles = new HashSet<>();
 
@@ -121,7 +127,6 @@ public class AuthController
                 }
             });
         }*/
-
         user.setRoles(roles);
         userRepository.save(user);
 

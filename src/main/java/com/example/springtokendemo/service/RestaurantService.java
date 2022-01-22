@@ -3,6 +3,7 @@ package com.example.springtokendemo.service;
 import com.example.springtokendemo.model.Restaurant;
 import com.example.springtokendemo.model.User;
 import com.example.springtokendemo.model.dto.PinChangeDto;
+import com.example.springtokendemo.model.dto.RestaurantDto;
 import com.example.springtokendemo.model.dto.RestaurantRequest;
 import com.example.springtokendemo.model.dto.RestaurantResponse;
 import com.example.springtokendemo.payload.response.MessageResponse;
@@ -58,7 +59,7 @@ public class RestaurantService
             user.setRestaurant(getRestaurant(restaurantRequest));
             User savedUser = userRepository.save(user);
 
-            return new RestaurantResponse(true, null, savedUser.getRestaurant());
+            return new RestaurantResponse(true, null, new RestaurantDto(savedUser.getRestaurant()));
         }).orElse(
             new RestaurantResponse(false, "Role not found", null)
         );
