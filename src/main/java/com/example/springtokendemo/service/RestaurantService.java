@@ -99,7 +99,7 @@ public class RestaurantService
         Restaurant restaurant = restaurantRepo.findById(pinChangeDto.getRestaurantId()).orElseThrow(() -> new RuntimeException("Hotel not found"));
         if (restaurant.getActive())
         {
-            if (encoder.matches(restaurant.getPin(), encoder.encode(pinChangeDto.getPin())))
+            if (encoder.matches(pinChangeDto.getPin(), restaurant.getPin()))
             {
                 restaurant.setPin(encoder.encode(pinChangeDto.getNewPin()));
 

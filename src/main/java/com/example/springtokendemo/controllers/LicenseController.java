@@ -44,6 +44,23 @@ public class LicenseController
         }
     }
 
+    @PutMapping("/blockLicense")
+    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR')")
+    public ResponseEntity<BlockedLicenseResponse> updateBlockLicense(@RequestBody BlockedLicenses blockedLicenses)
+    {
+        try
+        {
+            return new ResponseEntity<>(licenseService.updateBlockLicense(blockedLicenses), HttpStatus.OK);
+        }
+        catch (Exception e)
+        {
+            Map<String, String> map = new HashMap<>();
+            map.put("status", "false");
+            map.put("message", e.getMessage());
+            return new ResponseEntity(map, HttpStatus.BAD_REQUEST);
+        }
+    }
+
 
     @GetMapping(value = "/blockLicense")
     public ResponseEntity<List<BlockedLicenseResponse>> getAllBlockLicense()

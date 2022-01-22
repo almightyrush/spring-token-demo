@@ -82,28 +82,29 @@ public class LicenseService
         Restaurant restaurant = restaurantRepo.findById(pinValidationRequest.getRestaurantId()).orElseThrow(() -> new RuntimeException("Restaurant cannot be found"));
         User user = userRepository.findById(pinValidationRequest.getUserId()).orElseThrow(() -> new RuntimeException("User cannot be found"));
 
-        if (user.getRestaurant().getId().equals(restaurant.getId()))
+        Optional<BlockedLicenses> blockedLicenses = licenseRepo.findById(pinValidationRequest.getLicenceId());
+        if (blockedLicenses.isPresent())
         {
-            if (user.getActive())
+            if (blockedLicenses.get().getUser().getRestaurant().getId().equals(pinValidationRequest.getRestaurantId()))
             {
-                if (encoder.matches(pinValidationRequest.getPin(), restaurant.getPin()))
+                if (user.getActive())
                 {
-                    Optional<BlockedLicenses> blockedLicenses = licenseRepo.findById(pinValidationRequest.getLicenceId());
-                    if (blockedLicenses.isPresent())
+                    if (encoder.matches(pinValidationRequest.getPin(), restaurant.getPin()))
                     {
                         licenseRepo.delete(blockedLicenses.get());
+
+                        return new CommonResponse(true, "License unblocked successfully");
                     }
                     else
-                        return new CommonResponse(true, "License Details not found");
-                    return new CommonResponse(true, "License unblocked successfully");
+                        return new CommonResponse(false, "Pin does not match");
                 }
-                else
-                    return new CommonResponse(false, "Pin does not match");
-            }
 
-            return new CommonResponse(false, "User is not Active");
+                return new CommonResponse(false, "User is not Active");
+            }
+            return new CommonResponse(false, "Other Hotel cannot unblock");
         }
-        return new CommonResponse(false, "Other Hotel cannot unblock");
+        else
+            return new CommonResponse(true, "License Details not found");
     }
 
 
@@ -145,6 +146,7 @@ public class LicenseService
         return null;
     }
 
+
     private BlockedLicenseResponse blockedLicenseResponseBuilderForAllHotel(BlockedLicenses savedLicense)
     {
         try
@@ -169,5 +171,16 @@ public class LicenseService
             e.printStackTrace();
         }
         return null;
+    }
+
+
+    public BlockedLicenseResponse updateBlockLicense(BlockedLicenses blockedLicensesRequest) throws Exception
+    {
+        Optional<BlockedLicenses> blockedLicenses = licenseRepo.findByLicenseIgnoreCase(blockedLicensesRequest.getLicense());
+        if (blockedLicenses.isPresent())
+        {
+            return blockedLicenseResponseBuilder(licenseRepo.save(blockedLicensesRequest));
+        }
+        throw new Exception("License not found");
     }
 }
