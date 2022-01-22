@@ -79,23 +79,33 @@ public class LicenseService
     }
 
 
-    public String deleteBlockedLicense(PinValidationRequest pinValidationRequest)
+    public CommonResponse deleteBlockedLicense(PinValidationRequest pinValidationRequest)
     {
         Restaurant restaurant = restaurantRepo.findById(pinValidationRequest.getRestaurantId()).orElseThrow(() -> new RuntimeException("Restaurant cannot be found"));
         User user = userRepository.findById(pinValidationRequest.getUserId()).orElseThrow(() -> new RuntimeException("User cannot be found"));
 
-        if (user.getActive())
+        if (user.getRestaurant().getId().equals(restaurant.getId()))
         {
-            if (encoder.matches(encoder.encode(pinValidationRequest.getPin()), restaurant.getPin()))
+            if (user.getActive())
             {
-                licenseRepo.delete(licenseRepo.findById(pinValidationRequest.getLicenceId()).orElseThrow(() -> new RuntimeException("License cannot be found")));
-                return "License unblocked successfully";
+                if (encoder.matches(encoder.encode(pinValidationRequest.getPin()), restaurant.getPin()))
+                {
+                    Optional<BlockedLicenses> blockedLicenses = licenseRepo.findById(pinValidationRequest.getLicenceId());
+                    if (blockedLicenses.isPresent())
+                    {
+                        licenseRepo.delete(blockedLicenses.get());
+                    }
+                    else
+                        return new CommonResponse(true, "License Details not found");
+                    return new CommonResponse(true, "License unblocked successfully");
+                }
+                else
+                    return new CommonResponse(false, "Pin does not match");
             }
-            else
-                throw new RuntimeException("Pin does not match");
-        }
 
-        throw new RuntimeException("User is not Active");
+            return new CommonResponse(false, "User is not Active");
+        }
+        return new CommonResponse(false, "Other Hotel cannot unblock");
     }
 
 

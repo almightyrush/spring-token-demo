@@ -53,6 +53,10 @@ public class RestaurantService
             return new RestaurantResponse(false, "UserName should be unique", null);
         }
 
+        if (userRepository.existsByEmail(restaurantRequest.getEmail())) {
+            return new RestaurantResponse(false, "Email should be unique", null);
+        }
+
         User user = new User(restaurantRequest.getUsername(), restaurantRequest.getEmail(), encoder.encode(restaurantRequest.getPassword()));
         return Optional.ofNullable(roleRepository.findByName(ROLE_MODERATOR)).map(role -> {
             user.setRoles(new HashSet<>(Collections.singletonList(role.get())));

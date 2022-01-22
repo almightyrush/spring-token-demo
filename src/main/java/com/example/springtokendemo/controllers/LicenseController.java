@@ -1,10 +1,7 @@
 package com.example.springtokendemo.controllers;
 
 import com.example.springtokendemo.model.BlockedLicenses;
-import com.example.springtokendemo.model.dto.BlockedLicenseResponse;
-import com.example.springtokendemo.model.dto.LicenseRequestDto;
-import com.example.springtokendemo.model.dto.LicenseResponseDto;
-import com.example.springtokendemo.model.dto.PinValidationRequest;
+import com.example.springtokendemo.model.dto.*;
 import com.example.springtokendemo.service.LicenseService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -81,7 +78,7 @@ public class LicenseController
 
 
     @PostMapping("/blockLicense/unblock")
-    public ResponseEntity<String> unblockLicense(@RequestBody PinValidationRequest pinValidationRequest)
+    public ResponseEntity<CommonResponse> unblockLicense(@RequestBody PinValidationRequest pinValidationRequest)
     {
         try
         {
