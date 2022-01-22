@@ -5,7 +5,7 @@
         <i class="nc-icon nc-zoom-split"></i>
         <p>Dashboard</p>
       </sidebar-link>
-      <sidebar-link v-if="isAdmin() || isModerator()" to="/scanner/user">
+      <sidebar-link v-if="isModerator()" to="/scanner/user">
         <i class="nc-icon nc-circle-09"></i>
         <p>Add User</p>
       </sidebar-link>
@@ -29,7 +29,7 @@
         <i class="nc-icon nc-settings-90"></i>
         <p>Restaurant list</p>
       </sidebar-link>
-      <sidebar-link v-if="isAdmin()" to="/scanner/users">
+      <sidebar-link v-if="isAdmin() || isModerator()" to="/scanner/users">
         <i class="nc-icon nc-single-copy-04"></i>
         <p>Users list</p>
       </sidebar-link>

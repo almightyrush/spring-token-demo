@@ -99,14 +99,6 @@
           this.$notify({type:'error',text: error});
         });
       },
-      getAllRestaurant() {
-        this.$http.get('api/restaurant', this.header).then(response => {
-          this.allRestaurant = response.data;
-        }).catch(() => {
-          this.$notify({type:'error',text: 'Session expired login again'});
-          this.$router.push({name: 'Login'});
-        });
-      },
       isLogin() {
         const header = {
           headers: AuthHeader()
@@ -125,7 +117,6 @@
       }
     },
     created() {
-      this.getAllRestaurant();
       this.isLogin();
     }
   }

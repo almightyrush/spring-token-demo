@@ -36,13 +36,13 @@
 
          
           <!-- scanner type 1 -->
-           <card v-if="scannerType()">
+           <card v-if="scannerType">
             <h4 slot="header" class="card-title">Scan License</h4>
             <form>
             <hr/> 
               <div class="row">
                 <div class="col-md-10">
-                  <base-input tabindex="1" type="text"
+                  <base-input type="text"
                             label="Name"
                             placeholder="FullName" v-model="user.fullName">
                   </base-input>
@@ -54,7 +54,6 @@
                   <textarea name="address" 
                     rows="3" 
                     cols="35" 
-                    tabindex="2"
                     style="resize: none;"
                     class="form-control"
                     placeholder="Address">
@@ -63,13 +62,13 @@
                 <div class="col-md-3">
                   <base-input type="text"
                             label="City"
-                            placeholder="City" tabindex="3" v-model="user.city">
+                            placeholder="City" v-model="user.city">
                   </base-input>
                 </div>
                 <div class="col-md-3">
                   <base-input type="text"
                             label="State"
-                            placeholder="State" tabindex="4" v-model="user.state">
+                            placeholder="State" v-model="user.state">
                   </base-input>
                 </div>
               </div>
@@ -77,17 +76,17 @@
                 <div class="col-md-2">
                   <base-input type="text"
                             label="Zip Code"
-                            placeholder="Zip Code" tabindex="5" v-model="user.postalCode">
+                            placeholder="Zip Code"  v-model="user.postalCode">
                   </base-input>
-                  <base-input  tabindex="6" type="text">
+                  <base-input   type="text">
                   </base-input>
-                  <base-input :disabled="true" tabindex="7" type="text">
+                  <base-input :disabled="true" type="text">
                   </base-input>
                 </div>
                 <div class="col-md-8">
                   <base-input type="text"
                               label="License"
-                              placeholder="License" tabindex="10" v-model="user.licenseNumber">
+                              placeholder="License" v-model="user.licenseNumber">
                   </base-input>
                 </div>  
               </div>
@@ -244,14 +243,6 @@ export default {
       }
     },
   methods: {
-    scannerType() {
-      this.role = JSON.parse(localStorage.getItem('token'));
-      console.log(this.role.restaurant.scannerType);
-      if(this.role.restaurant.scannerType === 'scanner_1'){
-        return true;
-      }
-      return false;
-    },
     logout() {
       localStorage.removeItem('token');
       localStorage.removeItem('UserRole');
@@ -383,7 +374,15 @@ export default {
     getUser() {
       this.logInUser = localStorage.getItem('token')
       return this.logInUser.accessToken
-    }
+    },
+    scannerType() {
+      this.role = JSON.parse(localStorage.getItem('token'));
+      console.log(this.role.restaurant.scannerType);
+      if(this.role.restaurant.scannerType === 'scanner_1'){
+        return true;
+      }
+      return false;
+    },
   },
   created() {
     this.isLogin();

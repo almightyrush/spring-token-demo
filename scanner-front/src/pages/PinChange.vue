@@ -73,14 +73,15 @@ export default {
             this.$http.post('api/restaurant/pinChange', this.user, this.header).then(response => {
             if (response) {
                 this.$notify({type:'success',text: 'Pin changed'});
-                this.user = {}
+                this.user = {};
+                this.newPinAgain = '';
             }
             }).catch((error) => {
                 this.$notify({type:'error',text: error});
             });
         },
         checkPin() {
-             if (this.user.newPin === this.newPinAgain) {
+            if (this.user.newPin === this.newPinAgain) {
                 this.updatePin();
                 return false;
             } else {
