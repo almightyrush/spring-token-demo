@@ -4,7 +4,7 @@
       <div class="row">
         <div class="col-md-12">
           <!-- v-show=false -->
-          <card v-if="scannerType()" style="height: 500px;">
+          <card v-show="false" style="height: 500px;">
             <!-- <input type="text"  v-model="inputText"> -->
             <h4 slot="header" class="card-title">Scan License</h4>
             <form>
@@ -34,14 +34,15 @@
             </form>
           </card>
 
-          <!-- for form 2 -->
-           <card v-else>
+         
+          <!-- scanner type 1 -->
+           <card v-if="scannerType()">
             <h4 slot="header" class="card-title">Scan License</h4>
             <form>
             <hr/> 
               <div class="row">
                 <div class="col-md-10">
-                  <base-input type="text"
+                  <base-input tabindex="1" type="text"
                             label="Name"
                             placeholder="FullName" v-model="user.fullName">
                   </base-input>
@@ -53,6 +54,7 @@
                   <textarea name="address" 
                     rows="3" 
                     cols="35" 
+                    tabindex="2"
                     style="resize: none;"
                     class="form-control"
                     placeholder="Address">
@@ -61,13 +63,13 @@
                 <div class="col-md-3">
                   <base-input type="text"
                             label="City"
-                            placeholder="City" v-model="user.city">
+                            placeholder="City" tabindex="3" v-model="user.city">
                   </base-input>
                 </div>
                 <div class="col-md-3">
                   <base-input type="text"
                             label="State"
-                            placeholder="State" v-model="user.state">
+                            placeholder="State" tabindex="4" v-model="user.state">
                   </base-input>
                 </div>
               </div>
@@ -75,17 +77,21 @@
                 <div class="col-md-2">
                   <base-input type="text"
                             label="Zip Code"
-                            placeholder="Zip Code" v-model="user.postalCode">
+                            placeholder="Zip Code" tabindex="5" v-model="user.postalCode">
+                  </base-input>
+                  <base-input  tabindex="6" type="text">
+                  </base-input>
+                  <base-input :disabled="true" tabindex="7" type="text">
                   </base-input>
                 </div>
                 <div class="col-md-8">
                   <base-input type="text"
                               label="License"
-                              placeholder="License" v-model="user.licenseNumber">
+                              placeholder="License" tabindex="10" v-model="user.licenseNumber">
                   </base-input>
                 </div>  
               </div>
-              <div class="row">
+              <div class="row" v-if="hideUnblock">
                 <div class="col-md-8">
                   <base-input type="text"
                             label="Reason"
@@ -94,10 +100,84 @@
                 </div>
               </div>
               <div class="row">
-                <div class="col-md-2">
-                  <button type="button" class="btn btn-danger btn-fill float-left"  @click="blockUser">
+                <div class="col-md-2" v-if="hideBlock">
+                  <button type="button" class="btn btn-danger btn-fill float-left" @click="blockUser">
                   Block
               </button>
+                </div>
+                <div class="col-md-2"  v-if="hideUnblock">
+                  <button type="button" class="btn btn-success btn-fill float-left"  @click="unblockUser">
+                  Unblock
+              </button>
+                </div>
+                <div class="col-md-2" v-if="hideSearch">
+                  <button type="button" class="btn btn-primary btn-fill float-left" @click="checkValidation">
+                  Search
+                </button>
+                </div>
+                <div class="col-md-2" v-if="!hideSearch">
+                  <button type="reset" class="btn btn-default btn-fill float-left" @click="clearForm">
+                  Clear
+                  </button>
+                </div>
+              </div>
+            </form>
+          </card>
+           <!-- Scanner type 2 -->
+          <card v-else>
+            <h4 slot="header" class="card-title">Scan License</h4>
+            <form>
+              <hr/>
+              <div class="row">
+                <div class="col-md-9">
+                  <base-input type="text"
+                            label="Name"
+                            placeholder="FullName" v-model="user.fullName">
+                  </base-input>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6">
+                  <base-input type="text"
+                              label="License"
+                              placeholder="License" v-model="user.licenseNumber">
+                  </base-input>
+                </div>
+                <div class="col-md-3">
+                  <base-input type="text"
+                            label="City"
+                            placeholder="City" v-model="user.city">
+                  </base-input>
+                </div>
+              </div>
+              <div class="row" v-if="hideUnblock">
+                <div class="col-md-7">
+                  <base-input type="text"
+                            label="Reason"
+                            placeholder="Reason" v-model="user.reason">
+                  </base-input>
+                </div>
+              </div>
+               <div class="row">
+                <div class="col-md-2" v-if="hideBlock">
+                  <button type="button" class="btn btn-danger btn-fill float-left" @click="blockUser">
+                  Block
+                  </button>
+                </div>
+                <div class="col-md-2"  v-if="hideUnblock">
+                  <button type="button" class="btn btn-success btn-fill float-left"  @click="unblockUser">
+                  Unblock
+                  </button>
+                </div>
+                <div class="col-md-2" v-if="hideSearch">
+                  <button type="button" class="btn btn-primary btn-fill float-left" @click="checkValidation">
+                  Search
+                  </button>
+                </div>
+                <div class="col-md-2" v-if="!hideSearch">
+                  <button type="reset" class="btn btn-default btn-fill float-left" @click="clearForm">
+                  Clear
+                </button>
                 </div>
               </div>
             </form>
@@ -109,7 +189,7 @@
             :adaptive="true">
               <div class="modal-dialog modal-content" style="background-color: beige;">
                   <div class="modal-body">
-                    <h3 slot="header" class="card-title warning-style">{{toggleValue}}</h3>
+                    <label> <h3 slot="header" class="card-title">{{toggleValue}}</h3></label>
                   </div>
               </div>
             </main-modal>
@@ -129,7 +209,17 @@ export default {
   },
   data() {
       return {
+        hideSearch: true,
+        hideBlock: false,
+        hideUnblock: false,
         inputText: '',
+        inputUser: {
+          licenseNo : '',
+          fullName: '',
+          city: '',
+          country:'',
+          postalCode: ''
+        },
         user: {
           fullName: '',
           licenseNumber: '',
@@ -147,8 +237,6 @@ export default {
             fullName: '',
             city: ''
         },
-        enableUnblock: true,
-        enableBlock: true,
         role: '',
         logInUser: '',
         toggleValue: '',
@@ -193,8 +281,6 @@ export default {
           this.user.reason = data.reason
           this.toggleValue = 'License is blocked';
           this.$modal.show('Custom-modal');
-          this.enableUnblock = false;
-          this.enableBlock = true;
           this.inputText = '';
         }
         else {
@@ -212,9 +298,39 @@ export default {
       text = text.concat(end);
       return text;
     },
+    checkValidation() {
+        if (this.user.fullName === '' || this.user.licenseNo === '' || this.user.city === '' ) {
+          this.$notify({type:'warning',text: 'Fields are empty'});
+        }
+        else {
+          this.searchUser();
+        }
+      },
+    searchUser() {
+      this.inputUser.fullName = this.user.fullName;
+      this.inputUser.licenseNo = this.user.licenseNumber;
+      this.inputUser.city = this.user.city;
+      this.inputUser.country = this.user.country;
+      this.inputUser.postalCode = this.user.postalCode;
+      this.$http.post('api/license/check', this.inputUser, this.header).then(response => {
+        if (response.data.isBlocked) {
+          const data = response.data;
+          this.user.reason = data.reason
+          this.toggleValue = 'License is blocked';
+          this.$modal.show('Custom-modal');
+          this.hideSearch = false;
+          this.hideUnblock = true;
+        }
+        else {
+          this.$notify({type:'success',text: 'License is not blocked'});
+          this.hideSearch = false;
+          this.hideBlock = true;
+        }
+        }).catch((error) => {
+        this.$notify({type:'error',text: error});
+      });
+    },
     blockUser() {
-      this.toggleValue = 'License is blocked';
-      this.$modal.show('Custom-modal');
       const userid = JSON.parse(localStorage.getItem('token'));
       if (this.user.reason === '') {
         this.$notify({type:'warning',text: 'Input field is empty'});
@@ -244,6 +360,19 @@ export default {
           }).catch((error) => {
           this.$notify({type:'error',text: error});
         });
+    },
+    clearForm() {
+      this.hideSearch = true;
+      this.hideBlock =  false;
+      this.hideUnblock = false;
+      this.user = {
+          fullName: '',
+          licenseNumber: '',
+          city: '',
+          isBlocked: false,
+          licenseId: '',
+          reason: ''
+        };
     }
   },
   computed: {

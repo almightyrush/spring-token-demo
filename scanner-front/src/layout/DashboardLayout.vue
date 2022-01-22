@@ -17,9 +17,13 @@
         <i class="nc-icon nc-notes"></i>
         <p>Blocked License List</p>
       </sidebar-link>
-      <sidebar-link to="/scanner/block-license">
+      <sidebar-link to="/scanner/block-license" v-if="!isAdmin()">
         <i class="nc-icon nc-single-02"></i>
         <p>Block License</p>
+      </sidebar-link>
+      <sidebar-link v-if="isAdmin() || isModerator()" to="/scanner/pin-change">
+        <i class="nc-icon nc-single-02"></i>
+        <p>Change Pin</p>
       </sidebar-link>
     </side-bar>
     <div class="main-panel">

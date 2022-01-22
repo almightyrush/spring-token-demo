@@ -76,7 +76,7 @@
       </div>
       <div class="row">
          <div class="col-md-3">
-          <base-input type="pin"
+          <base-input type="password"
                     label="pin"
                     placeholder="PIN"
                     v-model="user.pin">

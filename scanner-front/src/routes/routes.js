@@ -9,6 +9,7 @@ import UserProfile from 'src/pages/UserProfile.vue'
 import TableList from 'src/pages/TableList.vue'
 import Restaurant from 'src/pages/RestaurantProfile.vue'
 import Login from 'src/pages/Login.vue'
+import PinChange from 'src/pages/PinChange.vue'
 
 const routes = [
   // {
@@ -50,6 +51,11 @@ const routes = [
         path: 'table-list',
         name: 'Table List',
         component: TableList
+      },
+      {
+        path: 'pin-change',
+        name: 'Pin Change',
+        component: PinChange
       },
     ]
   },

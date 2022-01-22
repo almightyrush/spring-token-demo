@@ -16,14 +16,12 @@
       <div class="collapse navbar-collapse justify-content-end input-city">
         <div class="form-outline">
           <input type="search" class="form-control" v-model="searchCriteria" placeholder="Search" />
-          <div class="cities-list" v-if="false">
+          <div class="cities-list" v-if="user">
              <span
-              v-for="city in city"
-              :key="city.id"
-              @click="searchUser(city)"
-              class="city-item form-control"
-            >
-            {{city.name}} hello <br>
+              v-for="user in user"
+              :key="user.licenseId"
+              @click="searchUser(user)"
+              class="city-item form-control"> {{user.fullName}}
              </span>
           </div>
         </div>
@@ -48,6 +46,8 @@
   </nav>
 </template>
 <script>
+import AuthHeader from 'src/auth-header.js';
+
   export default {
     computed: {
       routeName () {
@@ -64,25 +64,20 @@
         results: [],
         search: "",
         arrowCounter: 0,
-        city: [
-          {
-            id: 1,
-            name: 'india india india india'
-          },
-          {
-            id: 2,
-            name: 'USA'
-          },
-          {
-            id: 3,
-            name: 'AFG'
-          }
-        ]
+        user: [],
+        header: {
+          headers: AuthHeader()
+        },
       }
     },
     methods: {
       searchUser(user) {
-        console.log(user);
+        localStorage.setItem('blocked-user', JSON.stringify(user));
+        this.user = [];
+        this.$router.push({name: 'BlockLicense'}).catch((error) => {
+          console.log('error --->', error);
+          this.$router.go();
+        });
       },
       logout(){
         this.$router.push({name: 'Login'});
@@ -102,6 +97,19 @@
       hideSidebar () {
         this.$sidebar.displaySidebar(false)
       },
+    },
+    watch: {
+      searchCriteria(newValue, oldValue) {
+        let queryLength = newValue.length;
+        if (queryLength > 4) {
+          this.$http.get('api/search?searchQuery='+newValue, this.header).then(response => {
+            this.user = response.data;
+            this.searchCriteria = '';
+          }).catch(() => {
+            this.$notify({type:'error',text: 'Session expired login again'});
+          });
+        }
+      }
     }
   }
 

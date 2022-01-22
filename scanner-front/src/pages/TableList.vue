@@ -24,11 +24,12 @@
                 :adaptive="true">
                   <div class="modal-dialog modal-content">
                       <div class="modal-body">
-                        <label>Enter password to unblock</label>
+                        <label>Enter pin to unblock</label>
                         <base-input type="password"
-                            placeholder="Password">
+                            placeholder="Pin"
+                            v-model="pin">
                         </base-input>
-                        <button type="button" class="btn btn-success btn-fill">Unblock</button>
+                        <button type="button" class="btn btn-success btn-fill"  @click="unblockUser">Unblock</button>
                       </div>
                   </div>
                 </main-modal>
@@ -55,20 +56,16 @@
         columns: ['fullName', 'license','city' , 'country', 'address1', 'address2','postalCode' ,'reason','action'],
         tableData: [],
         options: {
-            filterable: false,
-            perPage: 10,
-            perPageValues: [],
-            pagination: {
-              dropdown: false,
-              show: true,
-            },
-            // columnsClasses: {
-            //   'fullName': 'fullNameClass',
-            //   'city': 'fullNameClass',
-            //   'license': 'fullNameClass',
-            //   'reason': 'fullNameClass',
-            //   'action': 'fullNameClass'
-            // }
+          filterable: false,
+          perPage: 10,
+          perPageValues: [],
+          pagination: {
+            dropdown: false,
+            show: true,
+        },
+        pin: '',
+        userDetails: {},
+        errorResponse: '',
         },
         header: { headers: AuthHeader() },
       }
@@ -83,15 +80,35 @@
       },
       blockUser(data) {
         this.$modal.show('Custom-modal');
-        // this.$http.delete('api/blockLicense'+ '?licenseId=' + data.row.id, this.header).then(response => {
-        //   if (response) {
-        //     this.$notify({type:'success',text: 'License is unblocked'});
-        //     this.searhBlocked();
-        //   }
-        //   }).catch((error) => {
-        //   this.$notify({type:'error',text: error});
-        // });
+        this.userDetails = data;
       },
+      unblockUser() {
+        const userobj = JSON.parse(localStorage.getItem('token'));
+        if (this.pin === undefined) {
+          this.$notify({type:'error',text: 'Enter Pin to unblock'});
+        }
+        else {
+        const userParams= {
+          restaurantId: userobj.restaurant.id,
+          userId: userobj.id,
+          licenceId: this.userDetails.row.id,
+          pin: this.pin
+        }
+        this.$http.post('api/blockLicense/unblock', userParams, this.header).then(response => {
+          console.log('resposne is ',  response);
+          if (response.data.isSuccess) {
+            this.$notify({type:'success',text: 'License is unblocked'});
+            this.$modal.hide('Custom-modal');
+            this.searhBlocked();
+          } else {
+            this.$notify({type:'error',text: response.data.message});
+          }
+          }).catch((error) => {
+          console.log(error);
+          this.$notify({type:'error',text: error});
+        });
+        }
+      }
     },
     mounted() {
       this.searhBlocked();

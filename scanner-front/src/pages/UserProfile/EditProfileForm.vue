@@ -25,7 +25,6 @@
           </base-input>
         </div>
       </div>
-
       <div class="row">
         <div class="col-md-6">
           <base-input type="text"
@@ -41,23 +40,6 @@
                     v-model="user.lastName">
           </base-input>
         </div>
-      </div>
-      <!-- <div class="row">
-        <div class="col-md-4">
-          <label>Role</label>
-          <select class="form-control form-control-sm" v-model="selectedRole">
-              <option value="User">User</option>
-              <option value="Admin">Admin</option>
-            </select>
-        </div> -->
-        <!-- <div class="col-md-4">
-          <label>Restaurant</label>
-            <select class="form-control form-control-sm" v-model="user.restaurant">
-            <option 
-            v-for="(restaurant) in allRestaurant"  :value="restaurant"
-            :key="restaurant.name">{{restaurant.name}}</option>
-          </select>
-        </div> -->
       </div>
       <div class="text-center">
         <button type="submit" class="btn btn-info btn-fill float-right" @click.prevent="checkValidation">
@@ -83,7 +65,6 @@
           firstName: '',
           lastName: '',
           password: '',
-          role: [],
           restaurant: []
         },
         selectedRole:'',
@@ -104,9 +85,9 @@
         }
       },
       onSubmit() {
-        this.user.role.push(this.selectedRole);
+        const userobj = JSON.parse(localStorage.getItem('token'));
+        this.user.restaurant = userobj.restaurant;
         this.$http.post('api/auth/signup', this.user, this.header).then(response => {
-          console.log('resposne is ',  response);
           if (response) {
             // this.$router.push({name: 'Search-Customer'});
             this.$notify({type:'success',text: 'User added successfully'});
@@ -115,7 +96,7 @@
             this.$notify({type:'erroe',text: response});
           }
         }).catch((error) => {
-          tthis.$notify({type:'error',text: error});
+          this.$notify({type:'error',text: error});
         });
       },
       getAllRestaurant() {
