@@ -60,8 +60,6 @@ public class LicenseService
     public List<BlockedLicenseResponse> getAllBlockedLicenses()
     {
         return licenseRepo.findAllByOrderByCreatedAtDesc()
-            .stream().limit(10)
-            .collect(Collectors.toList())
             .stream()
             .map(l -> blockedLicenseResponseBuilder(l))
             .collect(Collectors.toList());
@@ -88,7 +86,7 @@ public class LicenseService
         {
             if (user.getActive())
             {
-                if (encoder.matches(encoder.encode(pinValidationRequest.getPin()), restaurant.getPin()))
+                if (encoder.matches(pinValidationRequest.getPin(), restaurant.getPin()))
                 {
                     Optional<BlockedLicenses> blockedLicenses = licenseRepo.findById(pinValidationRequest.getLicenceId());
                     if (blockedLicenses.isPresent())
@@ -113,6 +111,7 @@ public class LicenseService
     {
         return licenseRepo.findByFullNameContainingOrLicenseContainingOrCityContaining(query)
             .stream()
+            .limit(10)
             .map(e -> generateResponse(e))
             .collect(Collectors.toList());
     }
@@ -138,7 +137,9 @@ public class LicenseService
                     .restaurant(new RestaurantDto(user.getRestaurant()))
                     .id(user.getId()).build())
                 .build();
-        }catch (Exception e){
+        }
+        catch (Exception e)
+        {
             e.printStackTrace();
         }
         return null;
