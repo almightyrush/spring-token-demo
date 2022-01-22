@@ -1,8 +1,10 @@
 package com.example.springtokendemo.controllers;
 
 import com.example.springtokendemo.model.Restaurant;
+import com.example.springtokendemo.model.dto.PinChangeDto;
 import com.example.springtokendemo.model.dto.RestaurantRequest;
 import com.example.springtokendemo.model.dto.RestaurantResponse;
+import com.example.springtokendemo.payload.response.MessageResponse;
 import com.example.springtokendemo.service.RestaurantService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -40,5 +42,11 @@ public class RestaurantController
     public ResponseEntity<List<Restaurant>> findAllRestaurant()
     {
         return new ResponseEntity<>(restaurantService.getRestaurants(), HttpStatus.OK);
+    }
+
+    @PostMapping("/restaurant/pinChange")
+    @PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN')")
+    public ResponseEntity<MessageResponse> changePin(@RequestBody PinChangeDto pinChangeDto){
+        return new ResponseEntity<>(restaurantService.pinUpdate(pinChangeDto), HttpStatus.OK);
     }
 }

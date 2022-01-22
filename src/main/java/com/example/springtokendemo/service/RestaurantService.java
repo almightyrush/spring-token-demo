@@ -2,8 +2,10 @@ package com.example.springtokendemo.service;
 
 import com.example.springtokendemo.model.Restaurant;
 import com.example.springtokendemo.model.User;
+import com.example.springtokendemo.model.dto.PinChangeDto;
 import com.example.springtokendemo.model.dto.RestaurantRequest;
 import com.example.springtokendemo.model.dto.RestaurantResponse;
+import com.example.springtokendemo.payload.response.MessageResponse;
 import com.example.springtokendemo.repository.RestaurantRepo;
 import com.example.springtokendemo.repository.RoleRepository;
 import com.example.springtokendemo.repository.UserRepository;
@@ -81,5 +83,24 @@ public class RestaurantService
     public List<Restaurant> getRestaurants()
     {
         return restaurantRepo.findAll();
+    }
+
+
+    @Transactional
+    public MessageResponse pinUpdate(PinChangeDto pinChangeDto)
+    {
+        Restaurant restaurant = restaurantRepo.findById(pinChangeDto.getRestaurantId()).orElseThrow(() -> new RuntimeException("Hotel not found"));
+        if (restaurant.getActive())
+        {
+            if (encoder.matches(restaurant.getPin(), encoder.encode(pinChangeDto.getPin())))
+            {
+                restaurant.setPin(encoder.encode(pinChangeDto.getNewPin()));
+
+                restaurantRepo.save(restaurant);
+                return new MessageResponse("Pin updated successfully");
+            }
+            throw new RuntimeException("Entered pin could not be verified");
+        }
+        throw new RuntimeException("Hotel is not active");
     }
 }
