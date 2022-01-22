@@ -46,7 +46,6 @@ public class LicenseController
 
 
     @GetMapping(value = "/blockLicense")
-    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR')")
     public ResponseEntity<List<BlockedLicenseResponse>> getAllBlockLicense()
     {
         try

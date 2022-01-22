@@ -61,7 +61,7 @@ public class LicenseService
     {
         return licenseRepo.findAllByOrderByCreatedAtDesc()
             .stream()
-            .map(l -> blockedLicenseResponseBuilderForAllHotel(l))
+            .map(l -> blockedLicenseResponseBuilder(l))
             .collect(Collectors.toList());
     }
 
