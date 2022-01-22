@@ -26,8 +26,10 @@ public class UserDetailsServiceImpl implements UserDetailsService
 
         if (user.getActive())
         {
-            Boolean isAdmin = user.getRoles().stream().anyMatch(e -> ERole.ROLE_ADMIN.name().equals(e.getName()));
-            if (user.getRestaurant().getActive() || isAdmin)
+            Boolean isAdmin = user.getRoles().stream().anyMatch(e -> ERole.ROLE_ADMIN.name().equals(e.getName().name()));
+            if (isAdmin)
+                return UserDetailsImpl.build(user);
+            else if(user.getRestaurant().getActive())
                 return UserDetailsImpl.build(user);
             else
                 throw new RuntimeException("Hotel is not active");
