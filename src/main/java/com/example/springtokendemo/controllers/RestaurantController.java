@@ -4,6 +4,7 @@ import com.example.springtokendemo.model.Restaurant;
 import com.example.springtokendemo.model.dto.PinChangeDto;
 import com.example.springtokendemo.model.dto.RestaurantRequest;
 import com.example.springtokendemo.model.dto.RestaurantResponse;
+import com.example.springtokendemo.model.dto.UserDto;
 import com.example.springtokendemo.payload.response.MessageResponse;
 import com.example.springtokendemo.service.RestaurantService;
 import org.springframework.http.HttpStatus;
@@ -38,7 +39,7 @@ public class RestaurantController
 
 
     @GetMapping("/restaurant")
-    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<Restaurant>> findAllRestaurant()
     {
         return new ResponseEntity<>(restaurantService.getRestaurants(), HttpStatus.OK);
@@ -48,5 +49,11 @@ public class RestaurantController
     @PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN')")
     public ResponseEntity<MessageResponse> changePin(@RequestBody PinChangeDto pinChangeDto){
         return new ResponseEntity<>(restaurantService.pinUpdate(pinChangeDto), HttpStatus.OK);
+    }
+
+    @GetMapping("/restaurant/users")
+    public ResponseEntity<List<UserDto>> getUsers(@RequestParam Long userId)
+    {
+        return new ResponseEntity<>(restaurantService.getUsers(userId), HttpStatus.OK);
     }
 }

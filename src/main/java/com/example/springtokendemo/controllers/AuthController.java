@@ -4,6 +4,7 @@ import com.example.springtokendemo.model.ERole;
 import com.example.springtokendemo.model.Restaurant;
 import com.example.springtokendemo.model.Role;
 import com.example.springtokendemo.model.User;
+import com.example.springtokendemo.model.dto.UserDto;
 import com.example.springtokendemo.payload.request.LoginRequest;
 import com.example.springtokendemo.payload.request.SignupRequest;
 import com.example.springtokendemo.payload.response.JwtResponse;
@@ -13,7 +14,9 @@ import com.example.springtokendemo.repository.RoleRepository;
 import com.example.springtokendemo.repository.UserRepository;
 import com.example.springtokendemo.security.jwt.JwtUtils;
 import com.example.springtokendemo.security.services.UserDetailsImpl;
+import com.example.springtokendemo.service.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -49,6 +52,8 @@ public class AuthController
 
     @Autowired
     JwtUtils jwtUtils;
+
+    @Autowired UserMapper userMapper;
 
 
     @PostMapping("/signin")
@@ -132,4 +137,7 @@ public class AuthController
 
         return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
     }
+
+
+
 }

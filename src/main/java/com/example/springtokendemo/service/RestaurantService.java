@@ -1,11 +1,9 @@
 package com.example.springtokendemo.service;
 
+import com.example.springtokendemo.model.ERole;
 import com.example.springtokendemo.model.Restaurant;
 import com.example.springtokendemo.model.User;
-import com.example.springtokendemo.model.dto.PinChangeDto;
-import com.example.springtokendemo.model.dto.RestaurantDto;
-import com.example.springtokendemo.model.dto.RestaurantRequest;
-import com.example.springtokendemo.model.dto.RestaurantResponse;
+import com.example.springtokendemo.model.dto.*;
 import com.example.springtokendemo.payload.response.MessageResponse;
 import com.example.springtokendemo.repository.RestaurantRepo;
 import com.example.springtokendemo.repository.RoleRepository;
@@ -28,6 +26,9 @@ public class RestaurantService
 
     @Autowired
     PasswordEncoder encoder;
+
+    @Autowired
+    UserMapper userMapper;
 
     private final RestaurantRepo restaurantRepo;
     private final RoleRepository roleRepository;
@@ -53,7 +54,8 @@ public class RestaurantService
             return new RestaurantResponse(false, "UserName should be unique", null);
         }
 
-        if (userRepository.existsByEmail(restaurantRequest.getEmail())) {
+        if (userRepository.existsByEmail(restaurantRequest.getEmail()))
+        {
             return new RestaurantResponse(false, "Email should be unique", null);
         }
 
@@ -107,5 +109,21 @@ public class RestaurantService
             throw new RuntimeException("Entered pin could not be verified");
         }
         throw new RuntimeException("Hotel is not active");
+    }
+
+
+    public List<UserDto> getUsers(Long userId)
+    {
+        User user = userRepository.findById(userId).get();
+        if (isAdmin(user))
+            return userMapper.toDto(userRepository.findAll());
+        else
+            return userMapper.toDto(userRepository.findByRestaurantId(user.getRestaurant().getId()));
+    }
+
+
+    private Boolean isAdmin(User user)
+    {
+        return user.getRoles().stream().anyMatch(e -> ERole.ROLE_ADMIN.name().equals(e.getName().name()));
     }
 }
