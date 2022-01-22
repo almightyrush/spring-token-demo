@@ -53,7 +53,7 @@ public class LicenseService
         {
             throw new Exception("License is already blocked");
         }
-        return blockedLicenseResponseBuilder(licenseRepo.save(blockedLicensesRequest));
+        return blockedLicenseResponseBuilderForAllHotel(licenseRepo.save(blockedLicensesRequest));
     }
 
 
@@ -136,6 +136,33 @@ public class LicenseService
                     .firstName(user.getFirstName())
                     .restaurant(new RestaurantDto(user.getRestaurant()))
                     .id(user.getId()).build())
+                .build();
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    private BlockedLicenseResponse blockedLicenseResponseBuilderForAllHotel(BlockedLicenses savedLicense)
+    {
+        try
+        {
+            return BlockedLicenseResponse.builder()
+                .license(savedLicense.getLicense())
+                .address1(savedLicense.getAddress1())
+                .address2(savedLicense.getAddress2())
+                .id(savedLicense.getId())
+                .city(savedLicense.getCity())
+                .country(savedLicense.getCountry())
+                .fullName(savedLicense.getFullName())
+                .reason(savedLicense.getReason())
+                .postalCode(savedLicense.getPostalCode())
+                .user(UserDto.builder().id(savedLicense.getUser().getId())
+                    .firstName(savedLicense.getUser().getFirstName())
+                    .restaurant(new RestaurantDto(savedLicense.getUser().getRestaurant()))
+                    .id(savedLicense.getUser().getId()).build())
                 .build();
         }
         catch (Exception e)
