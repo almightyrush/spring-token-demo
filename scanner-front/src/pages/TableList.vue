@@ -12,7 +12,7 @@
              <div class="col-12">
             <v-client-table :columns="columns" :data="tableData" :options="options" >
               <span slot="action" slot-scope="row">
-                <button type="submit" class="btn btn-success btn-sm btn-fill float-left"  @click.prevent="blockUser(row)">
+                <button :disabled="isAdmin(row)" type="submit" class="btn btn-success btn-sm btn-fill float-left"  @click.prevent="blockUser(row)">
                   Unblock
                 </button>
               </span>
@@ -42,13 +42,11 @@
   </div>
 </template>
 <script>
-  import LTable from 'src/components/Table.vue';
   import Card from 'src/components/Cards/Card.vue';
   import AuthHeader from 'src/auth-header.js';
 
   export default {
     components: {
-      LTable,
       Card
     },
     data () {
@@ -71,6 +69,16 @@
       }
     },
     methods: {
+      isAdmin(data) {
+        console.log(data);
+        const role = localStorage.getItem('UserRole');
+        const restaurant = data.row.user.restaurant.id;
+        const userid = JSON.parse(localStorage.getItem('token'));
+        if(role.includes('ROLE_ADMIN') || userid.restaurant.id === restaurant) {
+          return true;
+        }
+        return false;
+      },
       searhBlocked() {
         this.$http.get('api/blockLicense', this.header).then(response => {
           this.tableData = response.data;
@@ -88,25 +96,25 @@
           this.$notify({type:'error',text: 'Enter Pin to unblock'});
         }
         else {
-        const userParams= {
-          restaurantId: userobj.restaurant.id,
-          userId: userobj.id,
-          licenceId: this.userDetails.row.id,
-          pin: this.pin
-        }
-        this.$http.post('api/blockLicense/unblock', userParams, this.header).then(response => {
-          console.log('resposne is ',  response);
-          if (response.data.isSuccess) {
-            this.$notify({type:'success',text: 'License is unblocked'});
-            this.$modal.hide('Custom-modal');
-            this.searhBlocked();
-          } else {
-            this.$notify({type:'error',text: response.data.message});
+          const userParams= {
+            restaurantId: userobj.restaurant.id,
+            userId: userobj.id,
+            licenceId: this.userDetails.row.id,
+            pin: this.pin
           }
-          }).catch((error) => {
-          console.log(error);
-          this.$notify({type:'error',text: error});
-        });
+          this.$http.post('api/blockLicense/unblock', userParams, this.header).then(response => {
+            console.log('resposne is ',  response);
+            if (response.data.isSuccess) {
+              this.$notify({type:'success',text: 'License is unblocked'});
+              this.$modal.hide('Custom-modal');
+              this.searhBlocked();
+            } else {
+              this.$notify({type:'error',text: response.data.message});
+            }
+            }).catch((error) => {
+            console.log(error);
+            this.$notify({type:'error',text: error});
+          });
         }
       }
     },

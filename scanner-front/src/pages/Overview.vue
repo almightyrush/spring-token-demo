@@ -245,8 +245,12 @@ export default {
     },
   methods: {
     scannerType() {
-      this.role = localStorage.getItem('UserRole');
-      return !this.role.includes('ROLE_MODERATOR');
+      this.role = JSON.parse(localStorage.getItem('token'));
+      console.log(this.role.restaurant.scannerType);
+      if(this.role.restaurant.scannerType === 'scanner_1'){
+        return true;
+      }
+      return false;
     },
     logout() {
       localStorage.removeItem('token');

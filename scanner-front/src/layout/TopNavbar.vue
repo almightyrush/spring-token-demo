@@ -101,7 +101,7 @@ import AuthHeader from 'src/auth-header.js';
     watch: {
       searchCriteria(newValue, oldValue) {
         let queryLength = newValue.length;
-        if (queryLength > 4) {
+        if (queryLength > 3) {
           this.$http.get('api/search?searchQuery='+newValue, this.header).then(response => {
             this.user = response.data;
             this.searchCriteria = '';

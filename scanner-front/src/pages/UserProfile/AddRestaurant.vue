@@ -140,6 +140,7 @@
         this.$http.post('api/restaurant', this.user, this.header).then(response => {
           if (response) {
             this.$notify({type:'success',text: 'Restaurant added successfully'});
+            this.user = {};
           }
         }).catch((error) => {
           this.$notify({type:'error',text: error});

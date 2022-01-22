@@ -137,7 +137,6 @@ export default {
       }
     },
   methods: {
-   
     isAdmin() {
       this.role = localStorage.getItem('UserRole')
       return this.role === 'ROLE_ADMIN'? true : false;
@@ -194,6 +193,13 @@ export default {
     resetUser() {
       this.enableUnblock = false;
       this.enableBlock = true;
+      this.isAdmin();
+    },
+    isAdmin() {
+        const role = localStorage.getItem('UserRole');
+        if(role.includes('ROLE_ADMIN')) {
+          this.enableBlock = false;
+        }
     },
   },
   computed: {
@@ -216,6 +222,7 @@ export default {
   },
   created() {
     this.isLogin();
+    this.isAdmin();
   },
 }
 </script>
