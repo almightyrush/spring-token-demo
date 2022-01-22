@@ -1,6 +1,5 @@
 package com.example.springtokendemo.model.dto;
 
-import com.example.springtokendemo.model.Restaurant;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -8,11 +7,12 @@ import lombok.Data;
 @Builder
 @Data
 @AllArgsConstructor
-public class UserDto {
+public class UserDto
+{
 
     private Long id;
 
-    private Restaurant restaurant;
+    private RestaurantDto restaurant;
 
     private String firstName;
 
@@ -21,8 +21,5 @@ public class UserDto {
     private String userName;
 
     private Boolean isActive;
-
-
-
 
 }

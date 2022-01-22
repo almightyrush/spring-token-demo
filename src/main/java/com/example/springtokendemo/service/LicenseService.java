@@ -120,20 +120,27 @@ public class LicenseService
 
     private BlockedLicenseResponse blockedLicenseResponseBuilder(BlockedLicenses savedLicense)
     {
-        return BlockedLicenseResponse.builder()
-            .license(savedLicense.getLicense())
-            .address1(savedLicense.getAddress1())
-            .address2(savedLicense.getAddress2())
-            .id(savedLicense.getId())
-            .city(savedLicense.getCity())
-            .country(savedLicense.getCountry())
-            .fullName(savedLicense.getFullName())
-            .reason(savedLicense.getReason())
-            .postalCode(savedLicense.getPostalCode())
-            .user(UserDto.builder().id(savedLicense.getUser().getId())
-                .firstName(savedLicense.getUser().getFirstName())
-                .restaurant(savedLicense.getUser().getRestaurant())
-                .id(savedLicense.getUser().getId()).build())
-            .build();
+        try
+        {
+            User user = userRepository.findById(savedLicense.getUser().getId()).get();
+            return BlockedLicenseResponse.builder()
+                .license(savedLicense.getLicense())
+                .address1(savedLicense.getAddress1())
+                .address2(savedLicense.getAddress2())
+                .id(savedLicense.getId())
+                .city(savedLicense.getCity())
+                .country(savedLicense.getCountry())
+                .fullName(savedLicense.getFullName())
+                .reason(savedLicense.getReason())
+                .postalCode(savedLicense.getPostalCode())
+                .user(UserDto.builder().id(user.getId())
+                    .firstName(user.getFirstName())
+                    .restaurant(new RestaurantDto(user.getRestaurant()))
+                    .id(user.getId()).build())
+                .build();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return null;
     }
 }

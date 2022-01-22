@@ -16,7 +16,7 @@ public class BlockedLicenses extends AbstractEntity {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.EAGER)
     private User user;
 
     private String license;

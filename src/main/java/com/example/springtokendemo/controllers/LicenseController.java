@@ -5,6 +5,7 @@ import com.example.springtokendemo.model.dto.*;
 import com.example.springtokendemo.service.LicenseService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -27,6 +28,7 @@ public class LicenseController
 
 
     @PostMapping("/blockLicense")
+    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR')")
     public ResponseEntity<BlockedLicenseResponse> blockLicense(@RequestBody BlockedLicenses blockedLicenses)
     {
         try
@@ -44,6 +46,7 @@ public class LicenseController
 
 
     @GetMapping(value = "/blockLicense")
+    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR')")
     public ResponseEntity<List<BlockedLicenseResponse>> getAllBlockLicense()
     {
         try
@@ -61,6 +64,7 @@ public class LicenseController
 
 
     @PostMapping(value = "/license/check")
+    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR')")
     public ResponseEntity<LicenseResponseDto> check(@RequestBody LicenseRequestDto request)
     {
         try
@@ -78,6 +82,7 @@ public class LicenseController
 
 
     @PostMapping("/blockLicense/unblock")
+    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR')")
     public ResponseEntity<CommonResponse> unblockLicense(@RequestBody PinValidationRequest pinValidationRequest)
     {
         try
