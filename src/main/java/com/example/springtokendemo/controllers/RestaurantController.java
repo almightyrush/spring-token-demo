@@ -56,8 +56,8 @@ public class RestaurantController
 
     @GetMapping("/restaurant/deActive")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<CommonResponse> deActivate(@RequestParam Long restaurantId)
+    public ResponseEntity<CommonResponse> activeDeActivate(@RequestParam Long restaurantId)
     {
-        return new ResponseEntity<>(restaurantService.deActivate(restaurantId), HttpStatus.OK);
+        return new ResponseEntity<>(restaurantService.activeDeActivate(restaurantId), HttpStatus.OK);
     }
 }

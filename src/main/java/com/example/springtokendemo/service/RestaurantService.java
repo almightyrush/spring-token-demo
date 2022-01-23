@@ -128,14 +128,17 @@ public class RestaurantService
     }
 
 
-    public CommonResponse deActivate(Long restaurantId)
+    public CommonResponse activeDeActivate(Long restaurantId)
     {
         Optional<Restaurant> restaurant = restaurantRepo.findById(restaurantId);
-        if(restaurant.isPresent()){
-            Restaurant deActivatedRes = restaurant.get();
-            deActivatedRes.setActive(false);
-
-            restaurantRepo.save(deActivatedRes);
+        if (restaurant.isPresent())
+        {
+            Restaurant res = restaurant.get();
+            if (res.getActive())
+                res.setActive(false);
+            else
+                res.setActive(true);
+            restaurantRepo.save(res);
             return new CommonResponse(true, "Hotel Deactivated successfully");
         }
         return new CommonResponse(false, "Hotel cannot be found");
