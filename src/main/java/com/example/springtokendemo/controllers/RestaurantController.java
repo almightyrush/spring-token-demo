@@ -1,10 +1,7 @@
 package com.example.springtokendemo.controllers;
 
 import com.example.springtokendemo.model.Restaurant;
-import com.example.springtokendemo.model.dto.PinChangeDto;
-import com.example.springtokendemo.model.dto.RestaurantRequest;
-import com.example.springtokendemo.model.dto.RestaurantResponse;
-import com.example.springtokendemo.model.dto.UserDto;
+import com.example.springtokendemo.model.dto.*;
 import com.example.springtokendemo.payload.response.MessageResponse;
 import com.example.springtokendemo.service.RestaurantService;
 import org.springframework.http.HttpStatus;
@@ -55,5 +52,12 @@ public class RestaurantController
     public ResponseEntity<List<UserDto>> getUsers(@RequestParam Long userId)
     {
         return new ResponseEntity<>(restaurantService.getUsers(userId), HttpStatus.OK);
+    }
+
+    @GetMapping("/restaurant/deActive")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<CommonResponse> deActivate(@RequestParam Long restaurantId)
+    {
+        return new ResponseEntity<>(restaurantService.deActivate(restaurantId), HttpStatus.OK);
     }
 }
