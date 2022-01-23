@@ -18,8 +18,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-public class LicenseService
-{
+public class LicenseService {
 
     @Autowired
     PasswordEncoder encoder;
@@ -31,155 +30,125 @@ public class LicenseService
     private final UserRepository userRepository;
 
 
-    public LicenseService(LicenseRepo licenseRepo, UserRepository userRepository, RestaurantRepo restaurantRepo)
-    {
+    public LicenseService(LicenseRepo licenseRepo, UserRepository userRepository, RestaurantRepo restaurantRepo) {
         this.licenseRepo = licenseRepo;
         this.userRepository = userRepository;
         this.restaurantRepo = restaurantRepo;
     }
 
 
-    private static LicenseResponseDto generateResponse(BlockedLicenses l)
-    {
+    private static LicenseResponseDto generateResponse(BlockedLicenses l) {
         return new LicenseResponseDto(l.getFullName(), l.getLicense(), l.getAddress1(),
-            l.getAddress2(), l.getCountry(), l.getCity(), l.getPostalCode(), true, l.getId(), l.getReason());
+                l.getAddress2(), l.getCountry(), l.getCity(), l.getPostalCode(), true, l.getId(), l.getReason());
     }
 
 
-    public BlockedLicenseResponse blockLicense(BlockedLicenses blockedLicensesRequest) throws Exception
-    {
+    public BlockedLicenseResponse blockLicense(BlockedLicenses blockedLicensesRequest) throws Exception {
         Optional<BlockedLicenses> blockedLicenses = licenseRepo.findByLicenseIgnoreCase(blockedLicensesRequest.getLicense());
-        if (blockedLicenses.isPresent())
-        {
+        if (blockedLicenses.isPresent()) {
             throw new Exception("License is already blocked");
         }
         return blockedLicenseResponseBuilder(licenseRepo.save(blockedLicensesRequest));
     }
 
 
-    public List<BlockedLicenseResponse> getAllBlockedLicenses()
-    {
+    public List<BlockedLicenseResponse> getAllBlockedLicenses() {
         return licenseRepo.findAllByOrderByCreatedAtDesc()
-            .stream()
-            .map(l -> blockedLicenseResponseBuilder(l))
-            .collect(Collectors.toList());
+                .stream()
+                .map(l -> blockedLicenseResponseBuilder(l))
+                .collect(Collectors.toList());
     }
 
 
-    public LicenseResponseDto licenseCheck(LicenseRequestDto request)
-    {
+    public LicenseResponseDto licenseCheck(LicenseRequestDto request) {
         return licenseRepo.findByLicenseIgnoreCase(request.getLicenseNo()).map(LicenseService::generateResponse
         ).orElse(
-            new LicenseResponseDto(request.getFullName(), request.getLicenseNo(), null,
-                null, request.getCountry(), request.getCity(), request.getPostalCode(),
-                false, null, null)
+                new LicenseResponseDto(request.getFullName(), request.getLicenseNo(), null,
+                        null, request.getCountry(), request.getCity(), request.getPostalCode(),
+                        false, null, null)
         );
     }
 
 
-    public CommonResponse deleteBlockedLicense(PinValidationRequest pinValidationRequest)
-    {
+    public CommonResponse deleteBlockedLicense(PinValidationRequest pinValidationRequest) {
         Restaurant restaurant = restaurantRepo.findById(pinValidationRequest.getRestaurantId()).orElseThrow(() -> new RuntimeException("Restaurant cannot be found"));
         User user = userRepository.findById(pinValidationRequest.getUserId()).orElseThrow(() -> new RuntimeException("User cannot be found"));
 
         Optional<BlockedLicenses> blockedLicenses = licenseRepo.findById(pinValidationRequest.getLicenceId());
-        if (blockedLicenses.isPresent())
-        {
-            if (blockedLicenses.get().getUser().getRestaurant().getId().equals(pinValidationRequest.getRestaurantId()))
-            {
-                if (user.getActive())
-                {
-                    if (encoder.matches(pinValidationRequest.getPin(), restaurant.getPin()))
-                    {
+        if (blockedLicenses.isPresent()) {
+            if (blockedLicenses.get().getUser().getRestaurant().getId().equals(pinValidationRequest.getRestaurantId())) {
+                if (user.getActive()) {
+                    if (encoder.matches(pinValidationRequest.getPin(), restaurant.getPin())) {
                         licenseRepo.delete(blockedLicenses.get());
 
                         return new CommonResponse(true, "License unblocked successfully");
-                    }
-                    else
+                    } else
                         return new CommonResponse(false, "Pin does not match");
                 }
 
                 return new CommonResponse(false, "User is not Active");
             }
             return new CommonResponse(false, "Other Hotel cannot unblock");
-        }
-        else
+        } else
             return new CommonResponse(true, "License Details not found");
     }
 
 
-    public List<LicenseResponseDto> search(String query)
-    {
+    public List<LicenseResponseDto> search(String query) {
         return licenseRepo.findByFullNameContainingOrLicenseContainingOrCityContaining(query)
-            .stream()
-            .limit(10)
-            .map(e -> generateResponse(e))
-            .collect(Collectors.toList());
+                .stream()
+                .limit(10)
+                .map(e -> generateResponse(e))
+                .collect(Collectors.toList());
     }
 
 
-    private BlockedLicenseResponse blockedLicenseResponseBuilder(BlockedLicenses savedLicense)
-    {
-        try
-        {
+    private BlockedLicenseResponse blockedLicenseResponseBuilder(BlockedLicenses savedLicense) {
+        try {
             User user = userRepository.findById(savedLicense.getUser().getId()).get();
             return BlockedLicenseResponse.builder()
-                .license(savedLicense.getLicense())
-                .address1(savedLicense.getAddress1())
-                .address2(savedLicense.getAddress2())
-                .id(savedLicense.getId())
-                .city(savedLicense.getCity())
-                .country(savedLicense.getCountry())
-                .fullName(savedLicense.getFullName())
-                .reason(savedLicense.getReason())
-                .postalCode(savedLicense.getPostalCode())
-                .user(UserDto.builder().id(user.getId())
-                    .firstName(user.getFirstName())
-                    .restaurant(new RestaurantDto(user.getRestaurant()))
-                    .id(user.getId()).build())
-                .build();
-        }
-        catch (Exception e)
-        {
+                    .license(savedLicense.getLicense())
+                    .address1(savedLicense.getAddress1())
+                    .address2(savedLicense.getAddress2())
+                    .id(savedLicense.getId())
+                    .city(savedLicense.getCity())
+                    .country(savedLicense.getCountry())
+                    .fullName(savedLicense.getFullName())
+                    .reason(savedLicense.getReason())
+                    .postalCode(savedLicense.getPostalCode())
+                    .user(UserDto.builder().id(user.getId())
+                            .firstName(user.getFirstName())
+                            .restaurant(new RestaurantDto(user.getRestaurant()))
+                            .id(user.getId()).build())
+                    .build();
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
     }
 
 
-    private BlockedLicenseResponse blockedLicenseResponseBuilderForAllHotel(BlockedLicenses savedLicense)
-    {
-        try
-        {
-            return BlockedLicenseResponse.builder()
-                .license(savedLicense.getLicense())
-                .address1(savedLicense.getAddress1())
-                .address2(savedLicense.getAddress2())
-                .id(savedLicense.getId())
-                .city(savedLicense.getCity())
-                .country(savedLicense.getCountry())
-                .fullName(savedLicense.getFullName())
-                .reason(savedLicense.getReason())
-                .postalCode(savedLicense.getPostalCode())
-                .user(UserDto.builder().id(savedLicense.getUser().getId())
-                    .firstName(savedLicense.getUser().getFirstName())
-                    .id(savedLicense.getUser().getId()).build())
-                .build();
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-
-    public BlockedLicenseResponse updateBlockLicense(BlockedLicenses blockedLicensesRequest) throws Exception
-    {
-        Optional<BlockedLicenses> blockedLicenses = licenseRepo.findByLicenseIgnoreCase(blockedLicensesRequest.getLicense());
-        if (blockedLicenses.isPresent())
-        {
-            return blockedLicenseResponseBuilder(licenseRepo.save(blockedLicensesRequest));
+    public BlockedLicenseResponse updateBlockLicense(BlockedLicenses blockedLicensesRequest) throws Exception {
+        Optional<BlockedLicenses> blockedLicenses = licenseRepo.findById(blockedLicensesRequest.getId());
+        if (blockedLicenses.isPresent()) {
+            Optional<BlockedLicenses> blockedLicensesLicenceCheck = licenseRepo.findByLicenseIgnoreCase(blockedLicensesRequest.getLicense());
+            if (blockedLicensesLicenceCheck.isPresent()) {
+                if (blockedLicensesLicenceCheck.get().getId() == blockedLicenses.get().getId()) {
+                    BlockedLicenses updatedBL = blockedLicenses.get();
+                    updatedBL.setLicense(blockedLicensesRequest.getLicense());
+                    updatedBL.setAddress1(blockedLicensesRequest.getAddress1());
+                    updatedBL.setAddress2(blockedLicensesRequest.getAddress2());
+                    updatedBL.setFullName(blockedLicensesRequest.getFullName());
+                    updatedBL.setCity(blockedLicensesRequest.getCity());
+                    updatedBL.setCountry(blockedLicensesRequest.getCountry());
+                    updatedBL.setReason(blockedLicensesRequest.getReason());
+                    updatedBL.setPostalCode(blockedLicensesRequest.getPostalCode());
+                    User user = userRepository.findById(updatedBL.getUser().getId()).get();
+                    updatedBL.setUser(user);
+                    return blockedLicenseResponseBuilder(licenseRepo.save(updatedBL));
+                }
+                throw new Exception("License cannot be same");
+            }
         }
         throw new Exception("License not found");
     }

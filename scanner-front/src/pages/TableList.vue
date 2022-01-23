@@ -61,23 +61,25 @@
             dropdown: false,
             show: true,
         },
+        },
         pin: '',
         userDetails: {},
         errorResponse: '',
-        },
         header: { headers: AuthHeader() },
       }
     },
     methods: {
       isAdmin(data) {
-        console.log(data);
         const role = localStorage.getItem('UserRole');
         const restaurant = data.row.user.restaurant.id;
         const userid = JSON.parse(localStorage.getItem('token'));
-        if(role.includes('ROLE_ADMIN') || userid.restaurant.id === restaurant) {
+        if(role.includes('ROLE_ADMIN'))  {
           return true;
         }
-        return false;
+        if(userid.restaurant.id === restaurant) {
+          return false;
+        }
+        return true;
       },
       searhBlocked() {
         this.$http.get('api/blockLicense', this.header).then(response => {
@@ -103,7 +105,6 @@
             pin: this.pin
           }
           this.$http.post('api/blockLicense/unblock', userParams, this.header).then(response => {
-            console.log('resposne is ',  response);
             if (response.data.isSuccess) {
               this.$notify({type:'success',text: 'License is unblocked'});
               this.$modal.hide('Custom-modal');
@@ -112,7 +113,6 @@
               this.$notify({type:'error',text: response.data.message});
             }
             }).catch((error) => {
-            console.log(error);
             this.$notify({type:'error',text: error});
           });
         }
@@ -121,9 +121,6 @@
     mounted() {
       this.searhBlocked();
     }
-    // created() {
-    //   this.searchBlocked();
-    // }
   }
 </script>
 <style>

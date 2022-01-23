@@ -5,14 +5,14 @@
         <div class="col-12">
           <card>
             <template slot="header">
-              <h4 class="card-title margin-it">Blocked License 
+              <h4 class="card-title margin-it">Restaurant List 
               <!-- <button type="submit" class="btn btn-info btn-fill float-right"  @click="searhBlocked"> Search </button> -->
               </h4> 
             </template>
              <div class="col-12">
             <v-client-table :columns="columns" :data="tableData" :options="options" >
               <span slot="action" slot-scope="row">
-                <button v-if="isActive(row)" type="button" class="btn btn-danger btn-sm btn-fill float-left"  @click.prevent="blockRestaurant(row)">
+                <button v-if="isActive(row)" type="button" class="btn btn-danger btn-sm btn-fill float-left"  @click.prevent="unblockRestaurant(row)">
                   Deactivate
                 </button>
                 <button v-else type="submit" class="btn btn-success btn-sm btn-fill float-left"  @click.prevent="unblockRestaurant(row)">
@@ -56,21 +56,29 @@
       }
     },
     methods: {
+      unblockRestaurant(data) {
+        this.$http.get('api/restaurant/deActive?restaurantId=' + data.row.id, this.header).then(response => {
+          this.$notify({type:'success',text: response.data.message});
+          this.searchRestaurant();
+        }).catch((error) => {
+          this.$notify({type:'error',text: error});
+        });
+        
+      },
       isActive(data) {
         return data.row.active;
-        
       },
       searchRestaurant() {
         this.$http.get('api/restaurant', this.header).then(response => {
           this.tableData = response.data;
-        }).catch(() => {
-          this.$notify({type:'error',text: 'Session expired login again'});
+        }).catch((error) => {
+          this.$notify({type:'error',text: error});
         });
       },
-      blockRestaurant(data) {
-        this.$modal.show('Custom-modal');
-        this.userDetails = data;
-      },
+      // blockRestaurant(data) {
+      //   this.$modal.show('Custom-modal');
+      //   this.userDetails = data;
+      // },
       unblockUser() {
         const userobj = JSON.parse(localStorage.getItem('token'));
         if (this.pin === undefined) {
@@ -84,7 +92,6 @@
             pin: this.pin
           }
           this.$http.post('api/blockLicense/unblock', userParams, this.header).then(response => {
-            console.log('resposne is ',  response);
             if (response.data.isSuccess) {
               this.$notify({type:'success',text: 'License is unblocked'});
               this.$modal.hide('Custom-modal');
@@ -93,7 +100,6 @@
               this.$notify({type:'error',text: response.data.message});
             }
             }).catch((error) => {
-            console.log(error);
             this.$notify({type:'error',text: error});
           });
         }

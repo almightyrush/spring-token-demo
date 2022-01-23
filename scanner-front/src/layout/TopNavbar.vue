@@ -1,18 +1,7 @@
 <template>
   <nav class="navbar navbar-expand-lg">
     <div class="container-fluid">
-      <router-link :to="{path:'/scanner/overview'}" class="navbar-brand">Dashboard</router-link>
-      <!-- <button type="button"
-              class="navbar-toggler navbar-toggler-right"
-              :class="{toggled: $sidebar.showSidebar}"
-              aria-controls="navigation-index"
-              aria-expanded="false"
-              aria-label="Toggle navigation"
-              @click="toggleSidebar">toggle
-        <span class="navbar-toggler-bar burger-lines"></span>
-        <span class="navbar-toggler-bar burger-lines"></span>
-        <span class="navbar-toggler-bar burger-lines"></span>
-      </button> -->
+      <router-link v-if="isAdmin()" :to="{path:'/scanner/overview'}" class="navbar-brand">Dashboard</router-link>
       <div class="collapse navbar-collapse justify-content-end input-city">
         <div class="form-outline">
           <input type="search" class="form-control" v-model="searchCriteria" placeholder="Search" />
@@ -21,13 +10,10 @@
               v-for="user in user"
               :key="user.licenseId"
               @click="searchUser(user)"
-              class="city-item form-control"> {{user.fullName}}
+              class="city-item form-control pointer-hand"> {{user.fullName}}
              </span>
           </div>
         </div>
-        <!-- <button type="button" class="btn btn-primary" @click="searchUser">
-          <i class="fa fa-search"></i>
-        </button> -->
       </div>
 
       <div class="collapse navbar-collapse justify-content-end">
@@ -35,7 +21,7 @@
         </ul>
         <ul class="navbar-nav ml-auto">
           <li class="nav-item">
-            <a @click="logout" class="nav-link">
+            <a @click="logout" class="nav-link pointer-hand">
               Log out
             </a>
           </li>
@@ -97,6 +83,10 @@ import AuthHeader from 'src/auth-header.js';
       hideSidebar () {
         this.$sidebar.displaySidebar(false)
       },
+      isAdmin() {
+        const role = localStorage.getItem('UserRole');
+        return !role.includes('ROLE_ADMIN');
+      }
     },
     watch: {
       searchCriteria(newValue, oldValue) {
@@ -127,5 +117,8 @@ import AuthHeader from 'src/auth-header.js';
     border: 1px solid #E3E3E3;
     width: 200px;
     height: auto;
+  }
+  .pointer-hand {
+    cursor: pointer;
   }
 </style>

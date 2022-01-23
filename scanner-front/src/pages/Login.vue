@@ -64,7 +64,12 @@
             localStorage.setItem('UserRole', JSON.stringify(response.data.roles[0]))
             localStorage.setItem('token', JSON.stringify(response.data));
             this.$notify({type:'success',text: 'Login successful'});
-            this.$router.push({name: 'Overview'});
+            if (response.data.roles[0] === 'ROLE_ADMIN') {
+              this.$router.push({name: 'Restaurants'});
+            }
+            else {
+              this.$router.push({name: 'Overview'});
+            }
           } else {
             this.$notify({type:'error',text: 'Incorrect username or password'});
           }

@@ -89,7 +89,7 @@
         this.user.restaurant = userobj.restaurant;
         this.$http.post('api/auth/signup', this.user, this.header).then(response => {
           if (response) {
-            // this.$router.push({name: 'Search-Customer'});
+            this.user = {}; 
             this.$notify({type:'success',text: 'User added successfully'});
           }
           else {
@@ -105,7 +105,8 @@
         }
         this.$http.get('api/test/user', header).then(response => {
           if (response.data) {
-            console.log(response.data);
+            //do nothing
+            // console.log(response.data);
           }
           else {
             this.$notify({type:'error',text: 'Session expired login again'});

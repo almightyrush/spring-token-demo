@@ -128,9 +128,13 @@
     },
     methods:{
       checkValidation() {
+        const lengthRegex = /^([0-9]{6})$/;
         if (this.user.name === '' || this.user.address1 === '' || this.user.username === '' || this.user.email === ''
         || this.user.country === '' || this.user.city === '' || this.user.password === '' || this.user.pin === '') {
           this.$notify({type:'warning',text: 'Fields are empty'});
+        } else if (!lengthRegex.test(this.user.pin)) {
+          this.$notify({type:'warning',text: 'Pin should be numeric of length 6'});
+          return true;
         }
         else {
           this.addRestaurant();

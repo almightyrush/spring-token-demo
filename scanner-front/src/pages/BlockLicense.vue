@@ -75,7 +75,7 @@
                   </button>
                 </div> -->
                 <div class="col-md-2" v-if="enableUnblock">
-                  <button type="submit" class="btn btn-primary btn-fill float-left" @click="blockUser">
+                  <button type="submit" class="btn btn-primary btn-fill float-left" @click="updateLicense">
                   Update
                   </button>
                 </div>
@@ -115,7 +115,7 @@ export default {
           postalCode: ''
         },
         blockTheUser: {
-            licenseId:'',
+            id:'',
             reason:'',
             user:{
               id: ''
@@ -137,15 +137,6 @@ export default {
       }
     },
   methods: {
-    isAdmin() {
-      this.role = localStorage.getItem('UserRole')
-      return this.role === 'ROLE_ADMIN'? true : false;
-    },
-    logout() {
-      localStorage.removeItem('token');
-      localStorage.removeItem('UserRole');
-      this.$router.push({name: 'Login'});
-    },
     isLogin() {
       this.$http.get('api/test/user', this.header).then(response => {
         if (response.data) {
@@ -176,9 +167,8 @@ export default {
         this.blockTheUser.postalCode = this.user.postalCode;
         this.blockTheUser.country = this.user.country;
         if (this.user.licenseId !== null) {
-          this.blockTheUser.licenseId = this.user.licenseId;
+          this.blockTheUser.id = this.user.licenseId;
         }
-        console.log('blockuser', this.blockTheUser);
         this.$http.post('api/blockLicense', this.blockTheUser, this.header).then(response => {
           if (response) {
             this.$notify({type:'success',text: 'License is blocked'});
@@ -187,6 +177,36 @@ export default {
           }
           }).catch(() => {
           this.$notify({type:'error',text: 'License is already blocked'});
+        });
+      }
+    },
+    updateLicense() {
+       const userid = JSON.parse(localStorage.getItem('token'));
+      if (this.user.reason === '' || this.user.fullName === '' || this.user.license === '' || this.user.city === ''
+      ||this.user.country === '' || this.user.postalCode === '' || this.user.address1 === '') {
+        this.$notify({type:'warning',text: 'Input field is empty'});
+      } 
+      else {
+        this.blockTheUser.city = this.user.city
+        this.blockTheUser.license = this.user.licenseNumber
+        this.blockTheUser.fullName = this.user.fullName
+        this.blockTheUser.reason = this.user.reason
+        this.blockTheUser.user.id = userid.id;
+        this.blockTheUser.address1 = this.user.address1;
+        this.blockTheUser.address2 = this.user.address2;
+        this.blockTheUser.postalCode = this.user.postalCode;
+        this.blockTheUser.country = this.user.country;
+        if (this.user.licenseId !== null) {
+          this.blockTheUser.id = this.user.licenseId;
+        }
+        this.$http.put('api/blockLicense', this.blockTheUser, this.header).then(response => {
+          if (response) {
+            this.$notify({type:'success',text: 'License is updated'});
+            this.user = {}
+            localStorage.removeItem('blocked-user');
+          }
+          }).catch((error) => {
+          this.$notify({type:'error',text: error});
         });
       }
     },
@@ -199,6 +219,7 @@ export default {
         const role = localStorage.getItem('UserRole');
         if(role.includes('ROLE_ADMIN')) {
           this.enableBlock = false;
+          this.enableUnblock = false;
         }
     },
   },
@@ -212,9 +233,13 @@ export default {
   mounted() {
       const blockedUser = JSON.parse(localStorage.getItem('blocked-user'));
       if(blockedUser != null) {
+
+        //disable button for user of other restaurant
+        this.logInUser = localStorage.getItem('token')
         this.user = blockedUser;
         this.enableUnblock = true;
         this.enableBlock = false;
+        this.isAdmin();
       }
   },
   beforeDestroy() {

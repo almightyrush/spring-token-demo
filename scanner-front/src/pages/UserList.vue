@@ -5,7 +5,7 @@
         <div class="col-12">
           <card>
             <template slot="header">
-              <h4 class="card-title margin-it">Blocked License 
+              <h4 class="card-title margin-it">User List 
               <!-- <button type="submit" class="btn btn-info btn-fill float-right"  @click="searhBlocked"> Search </button> -->
               </h4> 
             </template>
@@ -30,7 +30,7 @@
     },
     data () {
       return {
-        columns: ['name', 'city' , 'country', 'address1', 'address2','scannerType','action'],
+        columns: ['firstName', 'lastName' , 'userName', 'restaurant.name'],
         tableData: [],
         options: {
           filterable: false,
@@ -39,57 +39,29 @@
           pagination: {
             dropdown: false,
             show: true,
-        },
-        pin: '',
+            },
+            headings: {
+                'restaurant.name': 'Restaurant'
+            },
         userDetails: {},
         errorResponse: '',
         },
+        pin:'',
         header: { headers: AuthHeader() },
       }
     },
     methods: {
       searchUsers() {
-        this.$http.get('api/user', this.header).then(response => {
-            console.log(user);
-          this.tableData = response.data;
-        }).catch(() => {
-          this.$notify({type:'error',text: 'Session expired login again'});
+        const userobj = JSON.parse(localStorage.getItem('token'));
+        this.$http.get('api/restaurant/users?userId='+userobj.id, this.header).then(response => {
+            this.tableData = response.data;
+        }).catch((error) => {
+          this.$notify({type:'error',text: error});
         });
       },
-      blockRestaurant(data) {
-        this.$modal.show('Custom-modal');
-        this.userDetails = data;
-      },
-      unblockUser() {
-        const userobj = JSON.parse(localStorage.getItem('token'));
-        if (this.pin === undefined) {
-          this.$notify({type:'error',text: 'Enter Pin to unblock'});
-        }
-        else {
-          const userParams= {
-            restaurantId: userobj.restaurant.id,
-            userId: userobj.id,
-            licenceId: this.userDetails.row.id,
-            pin: this.pin
-          }
-          this.$http.post('api/blockLicense/unblock', userParams, this.header).then(response => {
-            console.log('resposne is ',  response);
-            if (response.data.isSuccess) {
-              this.$notify({type:'success',text: 'License is unblocked'});
-              this.$modal.hide('Custom-modal');
-              this.searhBlocked();
-            } else {
-              this.$notify({type:'error',text: response.data.message});
-            }
-            }).catch((error) => {
-            console.log(error);
-            this.$notify({type:'error',text: error});
-          });
-        }
-      }
     },
     mounted() {
-    //   this.searchUsers();
+      this.searchUsers();
     }
   }
 </script>

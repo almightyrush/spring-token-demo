@@ -56,45 +56,55 @@
                     cols="35" 
                     style="resize: none;"
                     class="form-control"
+                    v-model="user.address1"
                     placeholder="Address">
                   </textarea>
                 </div>
                 <div class="col-md-3">
                   <base-input type="text"
-                            label="City"
-                            placeholder="City" v-model="user.city">
+                    label="City"
+                    placeholder="City" v-model="user.city">
                   </base-input>
                 </div>
                 <div class="col-md-3">
                   <base-input type="text"
-                            label="State"
-                            placeholder="State" v-model="user.state">
+                    label="State"
+                    placeholder="State" v-model="user.state">
                   </base-input>
                 </div>
               </div>
               <div class="row">
                 <div class="col-md-2">
-                  <base-input type="text"
-                            label="Zip Code"
-                            placeholder="Zip Code"  v-model="user.postalCode">
-                  </base-input>
-                  <base-input   type="text">
-                  </base-input>
-                  <base-input :disabled="true" type="text">
+                  <base-input type="number"
+                    label="Zip Code"
+                    maxLength=6
+                    placeholder="Zip Code"  v-model="user.postalCode">
                   </base-input>
                 </div>
-                <div class="col-md-8">
-                  <base-input type="text"
-                              label="License"
-                              placeholder="License" v-model="user.licenseNumber">
+                 <base-input label="-" class="col-md-2" type="text">
+                    </base-input>
+                    <base-input label="-" class="col-md-2" type="text">
+                    </base-input>
+                    <base-input label="-" class="col-md-2" type="text">
+                    </base-input>
+                    <base-input label="-" class="col-md-2" type="text">
+                    </base-input>
+                </div>
+                 <div class="row">
+                  <base-input label="-" class="col-md-2" type="text">
                   </base-input>
-                </div>  
+                    <div class="col-md-8">
+                  <base-input type="text"
+                    label="License"
+                    placeholder="License" v-model="user.license">
+                  </base-input>
+                </div>
               </div>
-              <div class="row" v-if="hideUnblock">
+              <div class="row" v-if="hideBlock || hideUnblock">
                 <div class="col-md-8">
                   <base-input type="text"
-                            label="Reason"
-                            placeholder="Reason" v-model="user.reason">
+                    label="Reason"
+                    placeholder="Reason" v-model="user.reason">
                   </base-input>
                 </div>
               </div>
@@ -105,7 +115,7 @@
               </button>
                 </div>
                 <div class="col-md-2"  v-if="hideUnblock">
-                  <button type="button" class="btn btn-success btn-fill float-left"  @click="unblockUser">
+                  <button type="button" class="btn btn-success btn-fill float-left"  @click="unblockPin">
                   Unblock
               </button>
                 </div>
@@ -130,30 +140,30 @@
               <div class="row">
                 <div class="col-md-9">
                   <base-input type="text"
-                            label="Name"
-                            placeholder="FullName" v-model="user.fullName">
+                    label="Name"
+                    placeholder="FullName" v-model="user.fullName">
                   </base-input>
                 </div>
               </div>
               <div class="row">
                 <div class="col-md-6">
                   <base-input type="text"
-                              label="License"
-                              placeholder="License" v-model="user.licenseNumber">
+                    label="License"
+                    placeholder="License" v-model="user.license">
                   </base-input>
                 </div>
                 <div class="col-md-3">
                   <base-input type="text"
-                            label="City"
-                            placeholder="City" v-model="user.city">
+                    label="City"
+                    placeholder="City" v-model="user.city">
                   </base-input>
                 </div>
               </div>
               <div class="row" v-if="hideUnblock">
                 <div class="col-md-7">
                   <base-input type="text"
-                            label="Reason"
-                            placeholder="Reason" v-model="user.reason">
+                    label="Reason"
+                    placeholder="Reason" v-model="user.reason">
                   </base-input>
                 </div>
               </div>
@@ -164,7 +174,7 @@
                   </button>
                 </div>
                 <div class="col-md-2"  v-if="hideUnblock">
-                  <button type="button" class="btn btn-success btn-fill float-left"  @click="unblockUser">
+                  <button type="button" class="btn btn-success btn-fill float-left"  @click="unblockPin">
                   Unblock
                   </button>
                 </div>
@@ -193,7 +203,23 @@
               </div>
             </main-modal>
           </div>
-           
+            <div>
+              <main-modal name="unblock-modal"
+                :width="520"
+                :height="210"
+                :adaptive="true">
+                  <div class="modal-dialog modal-content">
+                      <div class="modal-body">
+                        <label>Enter pin to unblock</label>
+                        <base-input type="password"
+                            placeholder="Pin"
+                            v-model="pin">
+                        </base-input>
+                        <button type="button" class="btn btn-success btn-fill"  @click="unblockUser">Unblock</button>
+                      </div>
+                  </div>
+                </main-modal>
+            </div>
         </div>
       </div>
     </div>
@@ -221,24 +247,32 @@ export default {
         },
         user: {
           fullName: '',
-          licenseNumber: '',
+          address1: '',
+          state: '',
+          postalCode: '',
+          license: '',
           city: '',
           isBlocked: false,
           licenseId: '',
           reason: ''
         },
         blockTheUser: {
-            reason:'',
-            user:{
-              id: ''
-            },
-            license: '',
-            fullName: '',
-            city: ''
+          reason:'',
+          user:{
+            id: ''
+          },
+          license: '',
+          fullName: '',
+          city: '',
+          state: '',
+          postalCode: '',
+          address1: ''
         },
         role: '',
         logInUser: '',
         toggleValue: '',
+        pin:'',
+        licenseId: '',
         header: { headers: AuthHeader() },
       }
     },
@@ -272,7 +306,7 @@ export default {
           this.user.fullName= data.fullName
           this.user.isBlocked= data.isBlocked
           this.user.licenseId= data.licenseId
-          this.user.licenseNumber= data.licenseNumber
+          this.user.license= data.licenseNumber
           this.user.reason = data.reason
           this.toggleValue = 'License is blocked';
           this.$modal.show('Custom-modal');
@@ -294,7 +328,7 @@ export default {
       return text;
     },
     checkValidation() {
-        if (this.user.fullName === '' || this.user.licenseNo === '' || this.user.city === '' ) {
+        if (this.user.fullName === '' || this.user.license === '' || this.user.city === '' ) {
           this.$notify({type:'warning',text: 'Fields are empty'});
         }
         else {
@@ -303,7 +337,7 @@ export default {
       },
     searchUser() {
       this.inputUser.fullName = this.user.fullName;
-      this.inputUser.licenseNo = this.user.licenseNumber;
+      this.inputUser.licenseNo = this.user.license;
       this.inputUser.city = this.user.city;
       this.inputUser.country = this.user.country;
       this.inputUser.postalCode = this.user.postalCode;
@@ -311,6 +345,7 @@ export default {
         if (response.data.isBlocked) {
           const data = response.data;
           this.user.reason = data.reason
+          this.licenseId = data.licenseId;
           this.toggleValue = 'License is blocked';
           this.$modal.show('Custom-modal');
           this.hideSearch = false;
@@ -332,29 +367,52 @@ export default {
       } 
       else {
         this.blockTheUser.city = this.user.city
-        this.blockTheUser.license = this.user.licenseNumber
+        this.blockTheUser.license = this.user.license
         this.blockTheUser.fullName = this.user.fullName
         this.blockTheUser.reason = this.user.reason
         this.blockTheUser.user.id = userid.id;
+        this.blockTheUser.address1 = this.user.address1;
+        this.blockTheUser.address2 = this.user.address2;
+        this.blockTheUser.postalCode = this.user.postalCode;
+        this.blockTheUser.country = this.user.country;
         this.$http.post('api/blockLicense', this.blockTheUser, this.header).then(response => {
           if (response) {
             this.$notify({type:'success',text: 'License is blocked'});
             this.user = {}
           }
-          }).catch(() => {
-          this.$notify({type:'error',text: 'License is already blocked'});
-        });
-      }
-    },
-    unblockUser() {
-        this.$http.delete('api/blockLicense'+ '?licenseId=' + this.user.licenseId, this.header).then(response => {
-          if (response) {
-            this.$notify({type:'success',text: 'License is unblocked'});
-            this.user = {}
-          }
           }).catch((error) => {
           this.$notify({type:'error',text: error});
         });
+      }
+    },
+    unblockPin() {
+      this.$modal.show('unblock-modal');
+        // this.userDetails = data;
+    },
+    unblockUser() {
+        const userobj = JSON.parse(localStorage.getItem('token'));
+        if (this.pin === undefined) {
+          this.$notify({type:'error',text: 'Enter Pin to unblock'});
+        }
+        else {
+          const userParams= {
+            restaurantId: userobj.restaurant.id,
+            userId: userobj.id,
+            licenceId: this.licenseId,
+            pin: this.pin
+          }
+          this.$http.post('api/blockLicense/unblock', userParams, this.header).then(response => {
+            if (response.data.isSuccess) {
+              this.$notify({type:'success',text: 'License is unblocked'});
+              this.$modal.hide('unblock-modal');
+              this.user = {}
+            } else {
+              this.$notify({type:'error',text: response.data.message});
+            }
+            }).catch((error) => {
+            this.$notify({type:'error',text: error});
+          });
+        }
     },
     clearForm() {
       this.hideSearch = true;
@@ -377,7 +435,6 @@ export default {
     },
     scannerType() {
       this.role = JSON.parse(localStorage.getItem('token'));
-      console.log(this.role.restaurant.scannerType);
       if(this.role.restaurant.scannerType === 'scanner_1'){
         return true;
       }
@@ -386,16 +443,6 @@ export default {
   },
   created() {
     this.isLogin();
-  },
-  watch: {
-    // inputText(newValue, oldValue) {
-    //   if (newValue !== oldValue && newValue !== '') {
-    //     this.showModal();
-    //     this.$nextTick(() => {
-    //       this.inputText = ''
-    //     });;
-    //   }
-    // }
   },
 }
 </script>

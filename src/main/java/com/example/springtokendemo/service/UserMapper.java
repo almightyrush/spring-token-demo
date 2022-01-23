@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 public class UserMapper {
 
     public List<UserDto> toDto(List<User> user) {
-        return user.stream().map(e -> new UserDto(e.getId(), new RestaurantDto(e.getRestaurant()), e.getFirstName(), e.getLastName(),
+        return user.stream().map(e -> new UserDto(e.getId(), e.getRestaurant() == null ? null : new RestaurantDto(e.getRestaurant()), e.getFirstName(), e.getLastName(),
                 e.getUsername(), e.getActive())
         ).collect(Collectors.toList());
     }

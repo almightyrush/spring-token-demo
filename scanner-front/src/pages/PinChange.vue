@@ -31,7 +31,7 @@
               </div>
               <div class="row">
                 <div class="col-md-2">
-                  <button type="submit" class="btn btn-primary btn-fill float-left"  @click="checkPin">
+                  <button type="button" class="btn btn-primary btn-fill float-left"  @click="checkPin">
                   Update
                 </button>
                 </div>
@@ -71,22 +71,28 @@ export default {
             this.user.restaurantId = this.currentUser.restaurant.id;
             this.user.userId = this.currentUser.id;
             this.$http.post('api/restaurant/pinChange', this.user, this.header).then(response => {
-            if (response) {
-                this.$notify({type:'success',text: 'Pin changed'});
+            if (response.data.isSuccess) {
+                this.$notify({type:'success',text: response.data.message});
                 this.user = {};
                 this.newPinAgain = '';
+            } else {
+                this.$notify({type:'error',text: response.data.message});
             }
             }).catch((error) => {
                 this.$notify({type:'error',text: error});
             });
         },
         checkPin() {
+            const lengthRegex = /^([0-9]{6})$/;
             if (this.user.newPin === this.newPinAgain) {
-                this.updatePin();
-                return false;
+              this.updatePin();
+              return false;
+            } else if (!lengthRegex.test(this.user.newPin)) {
+              this.$notify({type:'warning',text: 'Pin should be numeric of length 6'});
+              return true;
             } else {
-                this.$notify({type:'warning',text: 'Pin does not match'});
-                return true;
+              this.$notify({type:'warning',text: 'Pin does not match'});
+              return true;
             }
         },
     },

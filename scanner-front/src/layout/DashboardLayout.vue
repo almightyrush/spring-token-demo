@@ -1,7 +1,7 @@
 <template>
   <div class="wrapper">
     <side-bar>
-      <sidebar-link to="/scanner/overview">
+      <sidebar-link to="/scanner/overview" v-if="!isAdmin()">
         <i class="nc-icon nc-zoom-split"></i>
         <p>Dashboard</p>
       </sidebar-link>
