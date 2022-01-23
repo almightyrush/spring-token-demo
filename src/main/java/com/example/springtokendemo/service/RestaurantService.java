@@ -126,4 +126,21 @@ public class RestaurantService
     {
         return user.getRoles().stream().anyMatch(e -> ERole.ROLE_ADMIN.name().equals(e.getName().name()));
     }
+
+
+    public CommonResponse activeDeActivate(Long restaurantId)
+    {
+        Optional<Restaurant> restaurant = restaurantRepo.findById(restaurantId);
+        if (restaurant.isPresent())
+        {
+            Restaurant res = restaurant.get();
+            if (res.getActive())
+                res.setActive(false);
+            else
+                res.setActive(true);
+            restaurantRepo.save(res);
+            return new CommonResponse(true, "Hotel Deactivated successfully");
+        }
+        return new CommonResponse(false, "Hotel cannot be found");
+    }
 }
