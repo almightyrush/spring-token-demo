@@ -139,7 +139,7 @@ public class RestaurantService
             else
                 res.setActive(true);
             restaurantRepo.save(res);
-            return new CommonResponse(true, "Hotel Deactivated successfully");
+            return new CommonResponse(true, "Hotel status updated successfully");
         }
         return new CommonResponse(false, "Hotel cannot be found");
     }
