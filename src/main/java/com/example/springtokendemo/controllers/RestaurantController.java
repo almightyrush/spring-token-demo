@@ -44,7 +44,7 @@ public class RestaurantController
 
     @PostMapping("/restaurant/pinChange")
     @PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN')")
-    public ResponseEntity<MessageResponse> changePin(@RequestBody PinChangeDto pinChangeDto){
+    public ResponseEntity<CommonResponse> changePin(@RequestBody PinChangeDto pinChangeDto){
         return new ResponseEntity<>(restaurantService.pinUpdate(pinChangeDto), HttpStatus.OK);
     }
 

@@ -94,7 +94,7 @@ public class RestaurantService
 
 
     @Transactional
-    public MessageResponse pinUpdate(PinChangeDto pinChangeDto)
+    public CommonResponse pinUpdate(PinChangeDto pinChangeDto)
     {
         Restaurant restaurant = restaurantRepo.findById(pinChangeDto.getRestaurantId()).orElseThrow(() -> new RuntimeException("Hotel not found"));
         if (restaurant.getActive())
@@ -104,11 +104,11 @@ public class RestaurantService
                 restaurant.setPin(encoder.encode(pinChangeDto.getNewPin()));
 
                 restaurantRepo.save(restaurant);
-                return new MessageResponse("Pin updated successfully");
+                return new CommonResponse(true,"Pin updated successfully");
             }
-            throw new RuntimeException("Entered pin could not be verified");
+            return new CommonResponse(false,"Entered pin could not be verified");
         }
-        throw new RuntimeException("Hotel is not active");
+        return new CommonResponse(false,"Hotel is not active");
     }
 
 
