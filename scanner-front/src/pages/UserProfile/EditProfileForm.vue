@@ -88,15 +88,16 @@
         const userobj = JSON.parse(localStorage.getItem('token'));
         this.user.restaurant = userobj.restaurant;
         this.$http.post('api/auth/signup', this.user, this.header).then(response => {
-          if (response) {
+          const data = response.data;
+          if (data) {
             this.user = {}; 
-            this.$notify({type:'success',text: 'User added successfully'});
+            this.$notify({type:'success',text: data.message});
           }
           else {
-            this.$notify({type:'erroe',text: response});
+            this.$notify({type:'error',text: data.message});
           }
         }).catch((error) => {
-          this.$notify({type:'error',text: error});
+          this.$notify({type:'error',text: "Username or Email already exists."});
         });
       },
       isLogin() {
