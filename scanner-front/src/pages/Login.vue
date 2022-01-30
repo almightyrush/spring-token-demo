@@ -65,7 +65,7 @@
             localStorage.setItem('token', JSON.stringify(response.data));
             this.$notify({type:'success',text: 'Login successful'});
             if (response.data.roles[0] === 'ROLE_ADMIN') {
-              this.$router.push({name: 'Restaurants'});
+              this.$router.push({name: 'Hotels'});
             }
             else {
               this.$router.push({name: 'Overview'});

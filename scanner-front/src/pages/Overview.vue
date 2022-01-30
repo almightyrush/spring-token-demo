@@ -100,7 +100,7 @@
                   </base-input>
                 </div>
               </div>
-              <div class="row" v-if="hideBlock || hideUnblock">
+              <div class="row" v-if="!hideSearch">
                 <div class="col-md-8">
                   <base-input type="text"
                     label="Reason"
@@ -159,7 +159,7 @@
                   </base-input>
                 </div>
               </div>
-              <div class="row" v-if="hideUnblock">
+              <div class="row" v-if="!hideSearch">
                 <div class="col-md-7">
                   <base-input type="text"
                     label="Reason"

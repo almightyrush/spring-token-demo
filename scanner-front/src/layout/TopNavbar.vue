@@ -4,13 +4,17 @@
       <router-link v-if="isAdmin()" :to="{path:'/scanner/overview'}" class="navbar-brand">Dashboard</router-link>
       <div class="collapse navbar-collapse justify-content-end input-city">
         <div class="form-outline">
-          <input type="search" class="form-control" v-model="searchCriteria" placeholder="Search" />
-          <div class="cities-list" v-if="user">
+          <input type="search" class="form-control border border-info" v-model="searchCriteria" placeholder="Search"/>
+          <div class="cities-list" v-if="user"
+          @mouseleave="clearList"
+          >
              <span
               v-for="user in user"
               :key="user.licenseId"
               @click="searchUser(user)"
+              
               class="city-item form-control pointer-hand"> {{user.fullName}}
+
              </span>
           </div>
         </div>
@@ -60,6 +64,7 @@ import AuthHeader from 'src/auth-header.js';
       searchUser(user) {
         localStorage.setItem('blocked-user', JSON.stringify(user));
         this.user = [];
+        this.searchCriteria = '';
         this.$router.push({name: 'BlockLicense'}).catch((error) => {
           console.log('error --->', error);
           this.$router.go();
@@ -86,18 +91,26 @@ import AuthHeader from 'src/auth-header.js';
       isAdmin() {
         const role = localStorage.getItem('UserRole');
         return !role.includes('ROLE_ADMIN');
+      },
+      clearList() {
+        if(this.user) {
+          this.user = [];
+          this.searchCriteria = '';
+        }
+      },
+      searchQuery(val) {
+          this.$http.get('api/search?searchQuery='+val, this.header).then(response => {
+            this.user = response.data;
+          }).catch(() => {
+            this.$notify({type:'error',text: 'Session expired login again'});
+          });
       }
     },
     watch: {
       searchCriteria(newValue, oldValue) {
         let queryLength = newValue.length;
         if (queryLength > 3) {
-          this.$http.get('api/search?searchQuery='+newValue, this.header).then(response => {
-            this.user = response.data;
-            this.searchCriteria = '';
-          }).catch(() => {
-            this.$notify({type:'error',text: 'Session expired login again'});
-          });
+          this.searchQuery(newValue);
         }
       }
     }
@@ -121,4 +134,7 @@ import AuthHeader from 'src/auth-header.js';
   .pointer-hand {
     cursor: pointer;
   }
+  /* .border {
+    border: 2px solid #E3E3E3 !important;
+  } */
 </style>

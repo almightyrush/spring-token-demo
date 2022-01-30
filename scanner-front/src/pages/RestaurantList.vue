@@ -5,7 +5,7 @@
         <div class="col-12">
           <card>
             <template slot="header">
-              <h4 class="card-title margin-it">Restaurant List 
+              <h4 class="card-title margin-it">Hotel List 
               <!-- <button type="submit" class="btn btn-info btn-fill float-right"  @click="searhBlocked"> Search </button> -->
               </h4> 
             </template>
@@ -103,7 +103,23 @@
             this.$notify({type:'error',text: error});
           });
         }
+      },
+      isLogin() {
+      this.$http.get('api/test/user', this.header).then(response => {
+        if (response.data) {
+          console.log(response.data);
+        }
+        else {
+          this.$notify({type:'error',text: 'Session expired login again'});
+        }
+      }).catch(() => {
+        this.$notify({type:'error',text: 'Session expired login again'});
+        this.$router.push({name: 'Login'});
+      });
       }
+    },
+    created() {
+      this.isLogin();
     },
     mounted() {
       this.searchRestaurant();

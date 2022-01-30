@@ -60,8 +60,8 @@ const routes = [
         component: PinChange
       },
       {
-        path: 'restaurants',
-        name: 'Restaurants',
+        path: 'hotels',
+        name: 'Hotels',
         component: RestaurantList
       },
       {

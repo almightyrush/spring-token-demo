@@ -25,9 +25,9 @@
         <i class="nc-icon nc-key-25"></i>
         <p>Change Pin</p>
       </sidebar-link>
-      <sidebar-link v-if="isAdmin()" to="/scanner/restaurants">
+      <sidebar-link v-if="isAdmin()" to="/scanner/hotels">
         <i class="nc-icon nc-settings-90"></i>
-        <p>Restaurant list</p>
+        <p>Hotel list</p>
       </sidebar-link>
       <sidebar-link v-if="isAdmin() || isModerator()" to="/scanner/users">
         <i class="nc-icon nc-single-copy-04"></i>
