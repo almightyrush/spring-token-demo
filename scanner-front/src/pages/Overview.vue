@@ -44,7 +44,7 @@
                 <div class="col-md-10">
                   <base-input type="text"
                             label="Name"
-                            placeholder="FullName" v-model="user.fullName">
+                            placeholder="FullName" v-model="user.fullName" autofocus="autofocus">
                   </base-input>
                 </div>
               </div>
@@ -91,8 +91,6 @@
                     </base-input>
                 </div>
                  <div class="row">
-                  <base-input label="-" class="col-md-2" type="text">
-                  </base-input>
                     <div class="col-md-8">
                   <base-input type="text"
                     label="License"
@@ -141,7 +139,7 @@
                 <div class="col-md-9">
                   <base-input type="text"
                     label="Name"
-                    placeholder="FullName" v-model="user.fullName">
+                    placeholder="FullName" v-model="user.fullName" autofocus="autofocus">
                   </base-input>
                 </div>
               </div>
